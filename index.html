@@ -23,7 +23,6 @@
     --morning-muted: #8a7550;
     --morning-border: #e2c97e;
     --morning-shadow: rgba(180, 140, 60, 0.18);
-
     --evening-bg: #0d1117;
     --evening-card: #141b24;
     --evening-silver: #8fa8c8;
@@ -33,82 +32,47 @@
     --evening-muted: #6a88aa;
     --evening-border: #2a3f5a;
     --evening-shadow: rgba(60, 100, 160, 0.22);
-
     --transition: 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    --font-scale: 1;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
   html { scroll-behavior: smooth; }
-
   body {
     font-family: 'Noto Naskh Arabic', 'Amiri', serif;
-    min-height: 100vh;
-    min-height: 100dvh;
+    min-height: 100vh; min-height: 100dvh;
     transition: background var(--transition), color var(--transition);
     overflow-x: hidden;
   }
-
   body.morning { background: var(--morning-bg); color: var(--morning-text); }
   body.evening { background: var(--evening-bg); color: var(--evening-text); }
-
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.04;
+    content: ''; position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: 0.04;
     background-image: repeating-linear-gradient(45deg, currentColor 0, currentColor 1px, transparent 0, transparent 50%);
     background-size: 20px 20px;
   }
 
   /* Install banner */
   #installBanner {
-    display: none;
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    border-radius: 16px;
-    padding: 14px 20px;
-    font-size: 14px;
-    font-weight: 600;
-    gap: 12px;
-    align-items: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-    min-width: 280px;
-    justify-content: space-between;
-    animation: slideUp 0.4s ease both;
+    display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    z-index: 1000; border-radius: 16px; padding: 14px 20px; font-size: 14px; font-weight: 600;
+    gap: 12px; align-items: center; box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    min-width: 280px; justify-content: space-between; animation: slideUp 0.4s ease both;
   }
-
   @keyframes slideUp {
     from { opacity: 0; transform: translateX(-50%) translateY(20px); }
     to   { opacity: 1; transform: translateX(-50%) translateY(0); }
   }
-
   body.morning #installBanner { background: var(--morning-card); border: 1.5px solid var(--morning-border); color: var(--morning-text); }
   body.evening #installBanner { background: var(--evening-card); border: 1.5px solid var(--evening-border); color: var(--evening-text); }
-
   #installBanner.show { display: flex; }
-
   .install-text { font-size: 13px; line-height: 1.5; }
   .install-text strong { display: block; font-size: 14px; }
-
   .install-btns { display: flex; gap: 8px; flex-shrink: 0; }
-
   .btn-install {
-    padding: 8px 16px;
-    border-radius: 10px;
-    border: none;
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.2s;
+    padding: 8px 16px; border-radius: 10px; border: none;
+    font-family: 'Noto Naskh Arabic', serif; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: opacity 0.2s;
   }
-
   .btn-install:active { opacity: 0.75; }
   body.morning .btn-install.primary { background: var(--morning-gold); color: #fff; }
   body.evening .btn-install.primary { background: var(--evening-accent); color: #fff; }
@@ -116,270 +80,226 @@
   body.evening .btn-install.secondary { background: transparent; color: var(--evening-muted); }
 
   /* Header */
-  .header {
-    position: relative;
-    z-index: 10;
-    text-align: center;
-    padding: 48px 24px 28px;
-  }
-
-  .header-ornament {
-    font-size: 24px;
-    margin-bottom: 10px;
-    opacity: 0.65;
-    letter-spacing: 8px;
-    transition: color var(--transition);
-  }
-
+  .header { position: relative; z-index: 10; text-align: center; padding: 40px 24px 20px; }
+  .header-ornament { font-size: 24px; margin-bottom: 10px; opacity: 0.65; letter-spacing: 8px; transition: color var(--transition); }
   body.morning .header-ornament { color: var(--morning-gold); }
   body.evening .header-ornament { color: var(--evening-silver); }
-
-  .header h1 {
-    font-family: 'Amiri', serif;
-    font-size: clamp(26px, 5vw, 42px);
-    font-weight: 700;
-    line-height: 1.3;
-    margin-bottom: 6px;
-    transition: color var(--transition);
-  }
-
+  .header h1 { font-family: 'Amiri', serif; font-size: clamp(26px, 5vw, 42px); font-weight: 700; line-height: 1.3; margin-bottom: 6px; transition: color var(--transition); }
   body.morning .header h1 { color: var(--morning-deep); }
   body.evening .header h1 { color: var(--evening-deep); }
-
   .header-sub { font-size: 14px; opacity: 0.55; }
 
-  /* Toggle */
-  .toggle-wrapper {
-    display: flex;
-    justify-content: center;
-    margin: 0 auto 40px;
-    position: relative;
-    z-index: 10;
+  /* Controls bar */
+  .controls-bar {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; flex-wrap: wrap;
+    margin: 0 auto 36px; padding: 0 20px;
+    position: relative; z-index: 10;
   }
 
+  /* Toggle */
   .toggle-btn {
-    display: flex;
-    border-radius: 50px;
-    overflow: hidden;
-    border: 2px solid;
+    display: flex; border-radius: 50px; overflow: hidden; border: 2px solid;
     transition: border-color var(--transition), box-shadow var(--transition);
   }
-
   body.morning .toggle-btn { border-color: var(--morning-border); box-shadow: 0 4px 20px var(--morning-shadow); }
   body.evening .toggle-btn { border-color: var(--evening-border); box-shadow: 0 4px 20px var(--evening-shadow); }
-
   .toggle-option {
-    padding: 12px 28px;
-    font-family: 'Noto Naskh Arabic', serif;
-    font-size: 15px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition);
-    border: none;
-    outline: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 11px 24px; font-family: 'Noto Naskh Arabic', serif; font-size: 15px;
+    font-weight: 600; cursor: pointer; transition: all var(--transition);
+    border: none; outline: none; display: flex; align-items: center; gap: 8px;
   }
-
   body.morning .toggle-option.morning-opt { background: var(--morning-gold); color: #fff; }
   body.morning .toggle-option.evening-opt { background: var(--morning-card); color: var(--morning-muted); }
   body.evening .toggle-option.morning-opt { background: var(--evening-card); color: var(--evening-muted); }
   body.evening .toggle-option.evening-opt { background: var(--evening-accent); color: #fff; }
+  .toggle-icon { font-size: 17px; }
 
-  .toggle-icon { font-size: 18px; }
+  /* Font size control */
+  .font-ctrl {
+    display: flex; align-items: center; gap: 8px;
+    border-radius: 50px; padding: 8px 16px; border: 2px solid;
+    transition: all var(--transition);
+  }
+  body.morning .font-ctrl { border-color: var(--morning-border); background: var(--morning-card); box-shadow: 0 4px 20px var(--morning-shadow); }
+  body.evening .font-ctrl { border-color: var(--evening-border); background: var(--evening-card); box-shadow: 0 4px 20px var(--evening-shadow); }
+  .font-ctrl-label { font-size: 12px; opacity: 0.55; font-weight: 600; letter-spacing: 1px; }
+  .font-btn {
+    width: 30px; height: 30px; border-radius: 50%; border: none; cursor: pointer;
+    font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; line-height: 1;
+  }
+  .font-btn:active { transform: scale(0.9); }
+  body.morning .font-btn { background: var(--morning-gold); color: #fff; }
+  body.evening .font-btn { background: var(--evening-accent); color: #fff; }
+  .font-size-display { font-size: 13px; font-weight: 700; min-width: 24px; text-align: center; opacity: 0.7; }
 
   /* Cards grid */
   .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 24px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px 100px;
-    position: relative;
-    z-index: 10;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 24px; max-width: 1200px; margin: 0 auto;
+    padding: 0 20px 100px; position: relative; z-index: 10;
   }
 
   /* Card */
   .card {
-    border-radius: 20px;
-    padding: 28px 24px 22px;
-    position: relative;
-    overflow: hidden;
+    border-radius: 20px; padding: 28px 24px 22px; position: relative; overflow: hidden;
     transition: background var(--transition), border-color var(--transition), box-shadow var(--transition), transform 0.3s ease;
     animation: cardIn 0.5s ease both;
   }
-
   .card:hover { transform: translateY(-3px); }
-  .card:active { transform: scale(0.99); }
-
   @keyframes cardIn {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }
   }
-
   body.morning .card { background: var(--morning-card); border: 1.5px solid var(--morning-border); box-shadow: 0 6px 28px var(--morning-shadow), 0 1px 0 rgba(255,255,255,0.8) inset; }
   body.evening .card { background: var(--evening-card); border: 1.5px solid var(--evening-border); box-shadow: 0 6px 28px var(--evening-shadow); }
-
   .card::before {
-    content: attr(data-num);
-    position: absolute;
-    top: 14px;
-    left: 18px;
-    font-family: 'Amiri', serif;
-    font-size: 44px;
-    font-weight: 700;
-    line-height: 1;
-    opacity: 0.06;
+    content: attr(data-num); position: absolute; top: 14px; left: 18px;
+    font-family: 'Amiri', serif; font-size: 44px; font-weight: 700; line-height: 1; opacity: 0.06;
     transition: color var(--transition);
   }
-
   body.morning .card::before { color: var(--morning-gold); }
   body.evening .card::before { color: var(--evening-silver); }
-
-  .card-top-line {
-    width: 44px;
-    height: 3px;
-    border-radius: 2px;
-    margin-bottom: 18px;
-    transition: background var(--transition);
-  }
-
+  .card-top-line { width: 44px; height: 3px; border-radius: 2px; margin-bottom: 18px; transition: background var(--transition); }
   body.morning .card-top-line { background: var(--morning-gold); }
   body.evening .card-top-line { background: var(--evening-silver); }
-
   .card-label { font-size: 11px; font-weight: 600; letter-spacing: 2px; margin-bottom: 10px; opacity: 0.45; }
-
   .card-title {
-    font-family: 'Amiri', serif;
-    font-size: 19px;
-    font-weight: 700;
-    margin-bottom: 18px;
-    line-height: 1.4;
+    font-family: 'Amiri', serif; font-weight: 700; margin-bottom: 18px; line-height: 1.4;
+    font-size: calc(19px * var(--font-scale));
     transition: color var(--transition);
   }
-
   body.morning .card-title { color: var(--morning-deep); }
   body.evening .card-title { color: var(--evening-deep); }
 
-  .dhikr-box {
-    border-radius: 12px;
-    padding: 18px 16px;
-    margin-bottom: 16px;
-    transition: background var(--transition), border-color var(--transition);
-  }
-
+  /* Dhikr box */
+  .dhikr-box { border-radius: 12px; padding: 18px 16px; margin-bottom: 16px; transition: background var(--transition), border-color var(--transition); }
   body.morning .dhikr-box { background: linear-gradient(135deg, #fef9ec, #fdf3d4); border: 1px solid var(--morning-accent); }
   body.evening .dhikr-box { background: linear-gradient(135deg, #1a2535, #1e2d40); border: 1px solid var(--evening-accent); }
-
   .dhikr-text {
     font-family: 'Amiri Quran', 'Amiri', serif;
-    font-size: 18px;
-    line-height: 2.1;
-    text-align: center;
-    transition: color var(--transition);
+    font-size: calc(18px * var(--font-scale));
+    line-height: 2.1; text-align: center; transition: color var(--transition);
   }
-
   body.morning .dhikr-text { color: var(--morning-text); }
   body.evening .dhikr-text { color: var(--evening-text); }
 
-  .repeat-badge {
-    display: inline-block;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 3px 10px;
-    border-radius: 20px;
-    margin-top: 8px;
+  /* Counter section */
+  .counter-section {
+    display: flex; align-items: center; justify-content: center;
+    gap: 16px; margin-bottom: 16px; padding: 14px 12px;
+    border-radius: 12px; transition: background var(--transition);
+  }
+  body.morning .counter-section { background: rgba(201, 151, 58, 0.06); border: 1px solid rgba(201,151,58,0.2); }
+  body.evening .counter-section { background: rgba(90, 127, 170, 0.08); border: 1px solid rgba(90,127,170,0.2); }
+
+  .counter-display {
+    display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 80px;
+  }
+  .counter-num {
+    font-family: 'Amiri', serif; font-weight: 700; line-height: 1;
+    font-size: calc(36px * var(--font-scale));
+    transition: color var(--transition), transform 0.15s ease;
+  }
+  body.morning .counter-num { color: var(--morning-gold); }
+  body.evening .counter-num { color: var(--evening-silver); }
+  .counter-num.bump { transform: scale(1.25); }
+  .counter-target { font-size: 11px; opacity: 0.45; font-weight: 600; }
+
+  .counter-tap-btn {
+    flex: 1; max-width: 160px; padding: 14px 0;
+    border-radius: 14px; border: none; cursor: pointer;
+    font-family: 'Noto Naskh Arabic', serif; font-size: calc(15px * var(--font-scale));
+    font-weight: 700; transition: all 0.15s ease; display: flex; flex-direction: column;
+    align-items: center; gap: 4px; user-select: none;
+  }
+  .counter-tap-btn:active { transform: scale(0.93); }
+  body.morning .counter-tap-btn { background: var(--morning-gold); color: #fff; box-shadow: 0 4px 16px rgba(201,151,58,0.35); }
+  body.evening .counter-tap-btn { background: var(--evening-accent); color: #fff; box-shadow: 0 4px 16px rgba(58,90,138,0.4); }
+  .counter-tap-btn.done {
+    opacity: 0.6;
+  }
+  body.morning .counter-tap-btn.done { background: #4caf50; box-shadow: 0 4px 16px rgba(76,175,80,0.3); opacity: 1; }
+  body.evening .counter-tap-btn.done { background: #2e7d32; box-shadow: 0 4px 16px rgba(46,125,50,0.3); opacity: 1; }
+
+  .counter-tap-icon { font-size: 20px; }
+  .counter-tap-label { font-size: calc(12px * var(--font-scale)); }
+
+  .counter-reset {
+    width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer;
+    font-size: 16px; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .counter-reset:active { transform: rotate(180deg); }
+  body.morning .counter-reset { background: rgba(201,151,58,0.12); color: var(--morning-muted); }
+  body.evening .counter-reset { background: rgba(90,127,170,0.15); color: var(--evening-muted); }
+
+  /* Progress bar */
+  .progress-bar-wrap {
+    height: 4px; border-radius: 2px; margin-bottom: 14px; overflow: hidden;
     transition: background var(--transition);
   }
+  body.morning .progress-bar-wrap { background: rgba(201,151,58,0.15); }
+  body.evening .progress-bar-wrap { background: rgba(90,127,170,0.15); }
+  .progress-bar-fill {
+    height: 100%; border-radius: 2px; transition: width 0.3s ease, background 0.3s;
+    width: 0%;
+  }
+  body.morning .progress-bar-fill { background: var(--morning-gold); }
+  body.evening .progress-bar-fill { background: var(--evening-silver); }
+  .progress-bar-fill.complete { background: #4caf50; }
 
+  .repeat-badge {
+    display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 20px; margin-top: 8px; transition: background var(--transition);
+  }
   body.morning .repeat-badge { background: var(--morning-gold); color: #fff; }
   body.evening .repeat-badge { background: var(--evening-accent); color: #fff; }
 
+  /* Fadl */
   .fadl-section {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
-    margin-bottom: 14px;
-    padding: 12px;
-    border-radius: 10px;
-    transition: background var(--transition);
+    display: flex; gap: 10px; align-items: flex-start; margin-bottom: 14px;
+    padding: 12px; border-radius: 10px; transition: background var(--transition);
   }
-
   body.morning .fadl-section { background: rgba(201, 151, 58, 0.08); }
   body.evening .fadl-section { background: rgba(90, 127, 170, 0.1); }
-
   .fadl-icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
   .fadl-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; margin-bottom: 3px; opacity: 0.5; }
-  .fadl-text { font-size: 13.5px; line-height: 1.9; opacity: 0.85; }
+  .fadl-text { font-size: calc(13px * var(--font-scale)); line-height: 1.9; opacity: 0.85; }
 
   .source-line {
-    font-size: 11px;
-    opacity: 0.38;
-    margin-top: 10px;
-    padding-top: 10px;
-    border-top: 1px solid;
-    transition: border-color var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    font-size: 11px; opacity: 0.38; margin-top: 10px; padding-top: 10px;
+    border-top: 1px solid; transition: border-color var(--transition);
+    display: flex; align-items: center; gap: 6px;
   }
-
   body.morning .source-line { border-color: var(--morning-border); }
   body.evening .source-line { border-color: var(--evening-border); }
 
   .warning-note {
-    font-size: 11px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    margin-top: 6px;
-    opacity: 0.7;
-    transition: background var(--transition);
+    font-size: 11px; padding: 8px 12px; border-radius: 8px; margin-top: 6px;
+    opacity: 0.7; transition: background var(--transition);
   }
-
   body.morning .warning-note { background: rgba(200, 100, 50, 0.08); color: #8a4020; }
   body.evening .warning-note { background: rgba(180, 120, 60, 0.12); color: #c8a070; }
 
-  .section-header {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin: 4px 0;
-  }
-
+  /* Section header */
+  .section-header { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; margin: 4px 0; }
   .section-header-text {
-    font-family: 'Amiri', serif;
-    font-size: 17px;
-    font-weight: 700;
-    white-space: nowrap;
-    transition: color var(--transition);
+    font-family: 'Amiri', serif; font-size: 17px; font-weight: 700;
+    white-space: nowrap; transition: color var(--transition);
   }
-
   body.morning .section-header-text { color: var(--morning-gold); }
   body.evening .section-header-text { color: var(--evening-silver); }
-
-  .section-header-line {
-    flex: 1;
-    height: 1px;
-    transition: background var(--transition);
-  }
-
+  .section-header-line { flex: 1; height: 1px; transition: background var(--transition); }
   body.morning .section-header-line { background: var(--morning-border); }
   body.evening .section-header-line { background: var(--evening-border); }
 
+  /* Footer */
   .footer-note {
-    grid-column: 1 / -1;
-    text-align: center;
-    font-size: 12.5px;
-    padding: 20px;
-    border-radius: 14px;
-    border: 1px dashed;
-    line-height: 2;
-    transition: all var(--transition);
+    grid-column: 1 / -1; text-align: center; font-size: 12.5px; padding: 20px;
+    border-radius: 14px; border: 1px dashed; line-height: 2; transition: all var(--transition);
   }
-
   body.morning .footer-note { border-color: var(--morning-border); color: var(--morning-muted); background: rgba(255,255,255,0.5); }
   body.evening .footer-note { border-color: var(--evening-border); color: var(--evening-muted); background: rgba(255,255,255,0.02); }
 
@@ -395,8 +315,7 @@
 
   @media (max-width: 600px) {
     .cards-grid { grid-template-columns: 1fr; gap: 18px; padding: 0 14px 100px; }
-    .dhikr-text { font-size: 17px; }
-    .toggle-option { padding: 11px 22px; }
+    .toggle-option { padding: 10px 18px; }
   }
 </style>
 </head>
@@ -419,7 +338,7 @@
   <p class="header-sub">من السنة النبوية الصحيحة</p>
 </div>
 
-<div class="toggle-wrapper">
+<div class="controls-bar">
   <div class="toggle-btn">
     <button class="toggle-option morning-opt" onclick="setMode('morning')">
       <span class="toggle-icon">&#9728;</span> الصباح
@@ -427,6 +346,12 @@
     <button class="toggle-option evening-opt" onclick="setMode('evening')">
       <span class="toggle-icon">&#9790;</span> المساء
     </button>
+  </div>
+  <div class="font-ctrl">
+    <span class="font-ctrl-label">الخط</span>
+    <button class="font-btn" onclick="changeFont(-1)" title="تصغير">−</button>
+    <span class="font-size-display" id="fontDisplay">م</span>
+    <button class="font-btn" onclick="changeFont(1)" title="تكبير">+</button>
   </div>
 </div>
 
@@ -438,7 +363,7 @@ const adhkar = [
     num: "١", title: "شكر النعمة",
     morning: "اللهم ما أصبح بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك, فلك الحمد ولك الشكر",
     evening: "اللهم ما أمسى بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك, فلك الحمد ولك الشكر",
-    repeat: null,
+    repeat: null, target: null,
     fadl: "من قالها حين يصبح فقد أدى شكر يومه",
     fadlEvening: "من قالها حين يمسي فقد أدى شكر ليلته",
     source: "رواه أبو داود (5073) وصححه الألباني", warning: null
@@ -447,7 +372,7 @@ const adhkar = [
     num: "٢", title: "سيد الاستغفار",
     morning: "اللهم أنت ربي لا إله إلا أنت, خلقتني وأنا عبدك, وأنا على عهدك ووعدك ما استطعت, أعوذ بك من شر ما صنعت, أبوء لك بنعمتك علي وأبوء بذنبي فاغفر لي فإنه لا يغفر الذنوب إلا أنت",
     evening: "اللهم أنت ربي لا إله إلا أنت, خلقتني وأنا عبدك, وأنا على عهدك ووعدك ما استطعت, أعوذ بك من شر ما صنعت, أبوء لك بنعمتك علي وأبوء بذنبي فاغفر لي فإنه لا يغفر الذنوب إلا أنت",
-    repeat: null,
+    repeat: null, target: null,
     fadl: "من قالها حين يصبح موقناً بها فمات من يومه دخل الجنة",
     fadlEvening: "من قالها حين يمسي موقناً بها فمات من ليلته دخل الجنة",
     source: "رواه البخاري (6306)", warning: null
@@ -456,7 +381,7 @@ const adhkar = [
     num: "٣", title: "الشهادة لله",
     morning: "اللهم إني أصبحت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك, أنك أنت الله لا إله إلا أنت وحدك لا شريك لك, وأن محمداً عبدك ورسولك",
     evening: "اللهم إني أمسيت أشهدك وأشهد حملة عرشك وملائكتك وجميع خلقك, أنك أنت الله لا إله إلا أنت وحدك لا شريك لك, وأن محمداً عبدك ورسولك",
-    repeat: "أربع مرات",
+    repeat: "أربع مرات", target: 4,
     fadl: "أعتق الله قائلها من النار",
     fadlEvening: "أعتق الله قائلها من النار",
     source: "رواه أبو داود (5069) وحسنه الألباني", warning: null
@@ -465,7 +390,7 @@ const adhkar = [
     num: "٤", title: "الاستعاذة باسم الله",
     morning: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم",
     evening: "بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم",
-    repeat: "ثلاث مرات",
+    repeat: "ثلاث مرات", target: 3,
     fadl: "لم يضره شيء في يومه",
     fadlEvening: "لم يضره شيء في ليلته",
     source: "رواه أبو داود (5088) وصححه الألباني", warning: null
@@ -474,7 +399,7 @@ const adhkar = [
     num: "٥", title: "التوكل على الله",
     morning: "حسبي الله الذي لا إله إلا هو عليه توكلت وهو رب العرش العظيم",
     evening: "حسبي الله الذي لا إله إلا هو عليه توكلت وهو رب العرش العظيم",
-    repeat: null,
+    repeat: null, target: null,
     fadl: "كفاه الله ما أهمه من أمر دينه ودنياه",
     fadlEvening: "كفاه الله ما أهمه من أمر دينه ودنياه",
     source: "رواه أبو داود (5081) وصححه الألباني", warning: null
@@ -483,7 +408,7 @@ const adhkar = [
     num: "٦", title: "الرضا بالله والإسلام والنبي",
     morning: "رضيت بالله رباً, وبالإسلام ديناً, وبمحمد صلى الله عليه وسلم نبياً",
     evening: "رضيت بالله رباً, وبالإسلام ديناً, وبمحمد صلى الله عليه وسلم نبياً",
-    repeat: "ثلاث مرات",
+    repeat: "ثلاث مرات", target: 3,
     fadl: "كان حقاً على الله أن يرضيه يوم القيامة",
     fadlEvening: "كان حقاً على الله أن يرضيه يوم القيامة",
     source: "رواه أبو داود (5072) وصححه الألباني", warning: null
@@ -492,7 +417,7 @@ const adhkar = [
     num: "٧", title: "الصلاة على النبي",
     morning: "اللهم صل وسلم على نبينا محمد",
     evening: "اللهم صل وسلم على نبينا محمد",
-    repeat: "عشر مرات",
+    repeat: "عشر مرات", target: 10,
     fadl: "أدركته شفاعة النبي صلى الله عليه وسلم يوم القيامة",
     fadlEvening: "أدركته شفاعة النبي صلى الله عليه وسلم يوم القيامة",
     source: "رواه الطبراني, وحسنه الألباني في صحيح الجامع (6357)",
@@ -502,7 +427,7 @@ const adhkar = [
     num: "٨", title: "التسبيح",
     morning: "سبحان الله وبحمده",
     evening: "سبحان الله وبحمده",
-    repeat: "مئة مرة",
+    repeat: "مئة مرة", target: 100,
     fadl: "غفرت له ذنوبه وإن كانت مثل زبد البحر",
     fadlEvening: "غفرت له ذنوبه وإن كانت مثل زبد البحر",
     source: "رواه البخاري (6405) ومسلم (2691)", warning: null
@@ -511,7 +436,7 @@ const adhkar = [
     num: "٩", title: "التهليل",
     morning: "لا إله إلا الله وحده لا شريك له, له الملك وله الحمد وهو على كل شيء قدير",
     evening: "لا إله إلا الله وحده لا شريك له, له الملك وله الحمد وهو على كل شيء قدير",
-    repeat: "مئة مرة",
+    repeat: "مئة مرة", target: 100,
     fadl: "كتبت له مئة حسنة, وحطت عنه مئة خطيئة, وكانت له عدل عشرة رقاب من ولد إسماعيل, وكانت حرزاً من الشيطان سائر يومه, ولم يأت أحد بأفضل مما جاء به إلا من عمل أكثر",
     fadlEvening: "كتبت له مئة حسنة, وحطت عنه مئة خطيئة, وكانت له عدل عشرة رقاب من ولد إسماعيل, وكانت حرزاً من الشيطان سائر ليلته, ولم يأت أحد بأفضل مما جاء به إلا من عمل أكثر",
     source: "رواه البخاري (3293) ومسلم (2691)", warning: null
@@ -519,12 +444,68 @@ const adhkar = [
 ];
 
 let currentMode = 'morning';
+let fontLevel = 2; // 1=small, 2=medium, 3=large, 4=xlarge
+const fontScales = [0.85, 1, 1.2, 1.45];
+const fontLabels = ['ص', 'م', 'ك', 'ك+'];
+const counters = {};
+
+function changeFont(dir) {
+  fontLevel = Math.max(1, Math.min(4, fontLevel + dir));
+  document.documentElement.style.setProperty('--font-scale', fontScales[fontLevel - 1]);
+  document.getElementById('fontDisplay').textContent = fontLabels[fontLevel - 1];
+}
 
 function setMode(mode) {
   currentMode = mode;
   document.body.className = mode;
   document.getElementById('themeColor').setAttribute('content', mode === 'morning' ? '#c9973a' : '#0d1117');
+  // reset counters on mode change
+  Object.keys(counters).forEach(k => { counters[k] = 0; });
   renderCards();
+}
+
+function tap(idx) {
+  const item = adhkar[idx];
+  if (!item.target) return;
+  if (counters[idx] >= item.target) return;
+  counters[idx] = (counters[idx] || 0) + 1;
+  updateCounter(idx);
+}
+
+function resetCounter(idx) {
+  counters[idx] = 0;
+  updateCounter(idx);
+}
+
+function updateCounter(idx) {
+  const item = adhkar[idx];
+  const val = counters[idx] || 0;
+  const pct = Math.min(100, Math.round((val / item.target) * 100));
+  const done = val >= item.target;
+
+  const numEl = document.getElementById('cnum-' + idx);
+  const barEl = document.getElementById('cbar-' + idx);
+  const btnEl = document.getElementById('ctap-' + idx);
+
+  if (numEl) {
+    numEl.textContent = val;
+    numEl.classList.add('bump');
+    setTimeout(() => numEl.classList.remove('bump'), 150);
+  }
+  if (barEl) {
+    barEl.style.width = pct + '%';
+    if (done) barEl.classList.add('complete');
+    else barEl.classList.remove('complete');
+  }
+  if (btnEl) {
+    if (done) {
+      btnEl.classList.add('done');
+      btnEl.innerHTML = '<span class="counter-tap-icon">&#10003;</span><span class="counter-tap-label">اكتمل</span>';
+    } else {
+      btnEl.classList.remove('done');
+      btnEl.innerHTML = '<span class="counter-tap-icon">&#8635;</span><span class="counter-tap-label">اضغط للعد</span>';
+    }
+  }
 }
 
 function renderCards() {
@@ -549,6 +530,28 @@ function renderCards() {
 
     const dhikrText = isMorning ? item.morning : item.evening;
     const fadlText  = isMorning ? item.fadl    : item.fadlEvening;
+    const val = counters[i] || 0;
+    const done = item.target && val >= item.target;
+    const pct = item.target ? Math.min(100, Math.round((val / item.target) * 100)) : 0;
+
+    const counterHTML = item.target ? `
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill ${done ? 'complete' : ''}" id="cbar-${i}" style="width:${pct}%"></div>
+      </div>
+      <div class="counter-section">
+        <div class="counter-display">
+          <span class="counter-num" id="cnum-${i}">${val}</span>
+          <span class="counter-target">من ${item.target}</span>
+        </div>
+        <button class="counter-tap-btn ${done ? 'done' : ''}" id="ctap-${i}" onclick="tap(${i})">
+          ${done
+            ? '<span class="counter-tap-icon">&#10003;</span><span class="counter-tap-label">اكتمل</span>'
+            : '<span class="counter-tap-icon">&#8635;</span><span class="counter-tap-label">اضغط للعد</span>'
+          }
+        </button>
+        <button class="counter-reset" onclick="resetCounter(${i})" title="إعادة">&#8634;</button>
+      </div>
+    ` : '';
 
     card.innerHTML = `
       <div class="card-top-line"></div>
@@ -558,6 +561,7 @@ function renderCards() {
         <div class="dhikr-text">${dhikrText}</div>
         ${item.repeat ? `<div style="text-align:center"><span class="repeat-badge">${item.repeat}</span></div>` : ''}
       </div>
+      ${counterHTML}
       <div class="fadl-section">
         <div class="fadl-icon">${isMorning ? '&#9728;' : '&#9790;'}</div>
         <div>
@@ -582,35 +586,24 @@ function renderCards() {
 
 // PWA install
 let deferredPrompt = null;
-
 window.addEventListener('beforeinstallprompt', e => {
-  e.preventDefault();
-  deferredPrompt = e;
+  e.preventDefault(); deferredPrompt = e;
   document.getElementById('installBanner').classList.add('show');
 });
-
 document.getElementById('btnInstall').addEventListener('click', async () => {
   document.getElementById('installBanner').classList.remove('show');
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
-    deferredPrompt = null;
-  }
+  if (deferredPrompt) { deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt = null; }
 });
-
 document.getElementById('btnDismiss').addEventListener('click', () => {
   document.getElementById('installBanner').classList.remove('show');
 });
-
 window.addEventListener('appinstalled', () => {
-  document.getElementById('installBanner').classList.remove('show');
-  deferredPrompt = null;
+  document.getElementById('installBanner').classList.remove('show'); deferredPrompt = null;
 });
 
-// Register service worker
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    navigator.serviceWorker.register('/athkary/sw.js').catch(() => {});
   });
 }
 
