@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>قناتي</title>
+
+<!--
+=====================================================================
+   اعدادات الاباء (عدّل من هنا اذا حبيت)
+=====================================================================
+   1) لاضافة الفيديوات: افتح زر الترس (فوق على اليسار) واكتب الرمز السري
+   2) الرمز السري الافتراضي: 1234  (تقدر تغيّره من السطر اللي تحت)
+   3) كل اللي تضيفه ينحفظ تلقائي في نفس الجهاز والمتصفح
+=====================================================================
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#fff7e8;
+    --card:#ffffff;
+    --ink:#2b2233;
+    --muted:#7a6f86;
+    --tomato:#ff5a4d;
+    --sun:#ffc23c;
+    --teal:#22b8a6;
+    --sky:#4aa8ff;
+    --shadow:0 10px 0 rgba(43,34,51,.08), 0 18px 40px rgba(43,34,51,.12);
+    --radius:26px;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; padding:0;}
+  body{
+    font-family:"Baloo Bhaijaan 2", system-ui, "Segoe UI", Tahoma, sans-serif;
+    background:
+      radial-gradient(circle at 12% 8%, rgba(255,194,60,.35), transparent 38%),
+      radial-gradient(circle at 88% 6%, rgba(74,168,255,.30), transparent 40%),
+      radial-gradient(circle at 50% 110%, rgba(34,184,166,.28), transparent 45%),
+      var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  /* الترويسة */
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 22px; gap:14px;
+    position:sticky; top:0; z-index:20;
+    background:rgba(255,247,232,.82);
+    backdrop-filter:blur(8px);
+  }
+  .brand{display:flex; align-items:center; gap:12px;}
+  .logo{
+    width:54px; height:54px; border-radius:18px;
+    background:linear-gradient(140deg,var(--tomato),#ff8a4d);
+    display:grid; place-items:center;
+    box-shadow:0 6px 0 rgba(43,34,51,.12);
+  }
+  .logo svg{width:28px; height:28px; fill:#fff;}
+  .brand h1{font-size:26px; margin:0; font-weight:800; letter-spacing:.3px;}
+  .gear{
+    border:none; cursor:pointer;
+    width:48px; height:48px; border-radius:16px;
+    background:#fff; color:var(--muted);
+    display:grid; place-items:center;
+    box-shadow:0 5px 0 rgba(43,34,51,.10);
+    transition:transform .12s ease;
+  }
+  .gear:active{transform:translateY(3px);}
+  .gear svg{width:24px; height:24px; fill:currentColor;}
+
+  /* شبكة الفيديوات */
+  main{padding:10px 20px 60px;}
+  .grid{
+    display:grid; gap:22px;
+    grid-template-columns:repeat(auto-fill, minmax(220px,1fr));
+    max-width:1200px; margin:0 auto;
+  }
+  .card{
+    background:var(--card); border-radius:var(--radius);
+    overflow:hidden; cursor:pointer; border:none; text-align:right;
+    box-shadow:var(--shadow);
+    transition:transform .14s ease;
+    padding:0; font-family:inherit; color:inherit;
+    animation:pop .35s ease both;
+  }
+  .card:hover{transform:translateY(-4px) rotate(-.4deg);}
+  .card:active{transform:translateY(2px);}
+  .thumb{position:relative; aspect-ratio:16/9; background:#e9e2f0; overflow:hidden;}
+  .thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+  .thumb .play{
+    position:absolute; inset:0; display:grid; place-items:center;
+    background:rgba(43,34,51,.0); transition:background .15s;
+  }
+  .card:hover .thumb .play{background:rgba(43,34,51,.22);}
+  .play span{
+    width:60px; height:60px; border-radius:50%;
+    background:var(--tomato); display:grid; place-items:center;
+    box-shadow:0 6px 0 rgba(0,0,0,.15); transform:scale(.85);
+    transition:transform .15s;
+  }
+  .card:hover .play span{transform:scale(1);}
+  .play span svg{width:26px; height:26px; fill:#fff; margin-right:3px;}
+  .card .title{padding:14px 16px 18px; font-size:18px; font-weight:700; line-height:1.4;}
+
+  @keyframes pop{from{opacity:0; transform:scale(.92) translateY(10px);} to{opacity:1;}}
+
+  /* حالة فاضية */
+  .empty{
+    max-width:560px; margin:50px auto; text-align:center;
+    background:#fff; border-radius:var(--radius); padding:40px 30px;
+    box-shadow:var(--shadow);
+  }
+  .empty .logo{margin:0 auto 16px; width:70px; height:70px;}
+  .empty h2{margin:0 0 8px; font-size:24px;}
+  .empty p{color:var(--muted); margin:0 0 22px; font-size:17px;}
+
+  /* المشغّل (ملء الشاشة) */
+  .player-wrap{
+    position:fixed; inset:0; z-index:60;
+    background:#15101c; display:none;
+    flex-direction:column;
+  }
+  .player-wrap.show{display:flex;}
+  .player-top{
+    display:flex; align-items:center; gap:14px; padding:14px 18px;
+  }
+  .back{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800;
+    font-size:18px; color:#15101c; background:var(--sun);
+    padding:12px 22px; border-radius:18px;
+    box-shadow:0 5px 0 rgba(0,0,0,.25);
+    display:flex; align-items:center; gap:8px;
+  }
+  .back:active{transform:translateY(3px);}
+  .back svg{width:22px; height:22px; fill:currentColor;}
+  .player-now{color:#fff; font-size:18px; font-weight:600; opacity:.9;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .player-stage{flex:1; display:grid; place-items:center; padding:0 14px 20px;}
+  .player-box{width:100%; max-width:1100px; aspect-ratio:16/9; border-radius:22px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.5); background:#000; position:relative;}
+  #player{width:100%; height:100%;}
+  .end-cover{
+    position:absolute; inset:0; background:#000; z-index:5;
+    display:none; align-items:center; justify-content:center;
+  }
+  .end-cover.show{display:flex;}
+  .end-msg{color:#fff; font-size:26px; font-weight:800; opacity:.92;}
+
+  /* لوحة الاباء */
+  .modal{
+    position:fixed; inset:0; z-index:80; display:none;
+    align-items:center; justify-content:center; padding:18px;
+    background:rgba(43,34,51,.5); backdrop-filter:blur(4px);
+  }
+  .modal.show{display:flex;}
+  .sheet{
+    background:#fff; border-radius:28px; width:100%; max-width:520px;
+    max-height:88vh; overflow:auto; box-shadow:0 30px 70px rgba(0,0,0,.35);
+    padding:26px;
+  }
+  .sheet h3{margin:0 0 4px; font-size:23px;}
+  .sheet .hint{color:var(--muted); font-size:15px; margin:0 0 18px;}
+  .field{margin-bottom:14px;}
+  .field label{display:block; font-weight:700; margin-bottom:6px; font-size:15px;}
+  .field input{
+    width:100%; font-family:inherit; font-size:17px; padding:14px 16px;
+    border:2px solid #efe7f2; border-radius:16px; background:#faf7fc;
+    color:var(--ink); outline:none;
+  }
+  .field input:focus{border-color:var(--sky);}
+  .btn{
+    border:none; cursor:pointer; font-family:inherit; font-weight:800; font-size:18px;
+    padding:14px 20px; border-radius:18px; width:100%;
+    box-shadow:0 5px 0 rgba(0,0,0,.15);
+  }
+  .btn:active{transform:translateY(3px);}
+  .btn-add{background:var(--teal); color:#fff;}
+  .btn-ghost{background:#f1edf5; color:var(--ink); box-shadow:0 5px 0 rgba(0,0,0,.06);}
+  .row{display:flex; gap:10px; margin-top:10px;}
+  .row .btn{width:auto; flex:1;}
+  .vid-list{margin-top:22px; border-top:2px dashed #eee; padding-top:16px;}
+  .vid-list h4{margin:0 0 12px; font-size:17px; color:var(--muted);}
+  .vli{display:flex; align-items:center; gap:12px; padding:8px 0; border-bottom:1px solid #f3eef6;}
+  .vli img{width:74px; height:42px; object-fit:cover; border-radius:10px; flex:none; background:#eee;}
+  .vli .t{flex:1; font-weight:600; font-size:15px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .vli button{border:none; cursor:pointer; background:#ffe3e0; color:var(--tomato);
+    font-family:inherit; font-weight:800; padding:8px 12px; border-radius:12px; font-size:14px;}
+  .err{color:var(--tomato); font-weight:700; font-size:15px; margin:6px 0 0; min-height:20px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M3 5.5C3 4.1 4.1 3 5.5 3h13C19.9 3 21 4.1 21 5.5v13c0 1.4-1.1 2.5-2.5 2.5h-13C4.1 21 3 19.9 3 18.5v-13zM10 8v8l6-4-6-4z"/></svg>
+    </div>
+    <h1>قناتي</h1>
+  </div>
+  <button class="gear" id="gearBtn" title="اعدادات الاباء" aria-label="اعدادات الاباء">
+    <svg viewBox="0 0 24 24"><path d="M19.14 12.94a7.49 7.49 0 0 0 .05-.94 7.49 7.49 0 0 0-.05-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.61-.22l-2.39.96a7.3 7.3 0 0 0-1.62-.94l-.36-2.54a.5.5 0 0 0-.5-.42h-3.84a.5.5 0 0 0-.5.42l-.36 2.54c-.59.24-1.13.56-1.62.94l-2.39-.96a.5.5 0 0 0-.61.22L2.24 8.84a.5.5 0 0 0 .12.64l2.03 1.58c-.03.31-.05.62-.05.94s.02.63.05.94l-2.03 1.58a.5.5 0 0 0-.12.64l1.92 3.32c.14.24.42.34.68.22l2.39-.96c.49.38 1.03.7 1.62.94l.36 2.54c.05.24.25.42.5.42h3.84c.25 0 .45-.18.5-.42l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.26.12.54.02.68-.22l1.92-3.32a.5.5 0 0 0-.12-.64l-2.03-1.58zM12 15.5A3.5 3.5 0 1 1 12 8.5a3.5 3.5 0 0 1 0 7z"/></svg>
+  </button>
+</header>
+
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty" style="display:none">
+    <div class="logo"><svg viewBox="0 0 24 24"><path d="M10 8v8l6-4-6-4z"/></svg></div>
+    <h2>ما فيه فيديوات بعد</h2>
+    <p>اضغط زر الترس فوق، اكتب الرمز السري، وضيف الفيديوات اللي تبيها لاطفالك.</p>
+    <button class="btn btn-add" style="max-width:240px;margin:0 auto" onclick="openParent()">اضافة فيديوات</button>
+  </div>
+</main>
+
+<!-- المشغّل -->
+<div class="player-wrap" id="playerWrap">
+  <div class="player-top">
+    <button class="back" onclick="closePlayer()">
+      <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6v12z"/></svg>
+      رجوع
+    </button>
+    <div class="player-now" id="playerNow"></div>
+  </div>
+  <div class="player-stage">
+    <div class="player-box">
+      <div id="player"></div>
+      <div class="end-cover" id="endCover">
+        <div class="end-msg">انتهى الفيديو، احسنت</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- لوحة الاباء -->
+<div class="modal" id="parentModal">
+  <div class="sheet">
+    <!-- شاشة الرمز السري -->
+    <div id="pinScreen">
+      <h3>اعدادات الاباء</h3>
+      <p class="hint">اكتب الرمز السري عشان تضيف او تحذف فيديوات.</p>
+      <div class="field">
+        <label>الرمز السري</label>
+        <input type="password" id="pinInput" inputmode="numeric" placeholder="****">
+      </div>
+      <p class="err" id="pinErr"></p>
+      <div class="row">
+        <button class="btn btn-add" onclick="checkPin()">دخول</button>
+        <button class="btn btn-ghost" onclick="closeParent()">الغاء</button>
+      </div>
+    </div>
+
+    <!-- شاشة الادارة -->
+    <div id="manageScreen" style="display:none">
+      <h3>ادارة الفيديوات</h3>
+      <p class="hint">الصق رابط اليوتيوب واكتب اسم بسيط للفيديو، وبعدين اضغط اضافة.</p>
+      <div class="field">
+        <label>رابط الفيديو من اليوتيوب</label>
+        <input type="text" id="urlInput" dir="ltr" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+      <div class="field">
+        <label>اسم الفيديو (اختياري)</label>
+        <input type="text" id="titleInput" placeholder="مثال: كرتون الحروف">
+      </div>
+      <p class="err" id="addErr"></p>
+      <button class="btn btn-add" onclick="addVideo()">اضافة الفيديو</button>
+
+      <div class="vid-list">
+        <h4>الفيديوات الحالية</h4>
+        <div id="adminList"></div>
+      </div>
+      <div class="row">
+        <button class="btn btn-ghost" onclick="closeParent()">تم</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ====== الرمز السري (غيّره من هنا اذا تبي) ====== */
+const PARENT_PIN = "1234";
+
+/* ====== كم ثانية قبل النهاية نسكّر الفيديو ونغطيه باللون الاسود ======
+   لو حسّيت ان الاقتراحات تطلع بدري، زِد الرقم (مثلا 3 او 4).
+*/
+const END_COVER_SECONDS = 2;
+
+/* ====== التخزين ====== */
+const STORE_KEY = "kidstube_videos_v1";
+
+/* ====== فيديوات البداية (اختياري) ======
+   تقدر تضيف فيديوات اولية هنا بنفس الشكل، او تخليها فاضية وتضيف من اللوحة.
+   مثال:
+   { id:"VIDEO_ID", title:"اسم الفيديو" }
+*/
+const SEED = [];
+
+let videos = loadVideos();
+let player = null;
+let apiReady = false;
+let pendingPlayId = null;
+let endWatch = null;
+
+function loadVideos(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return SEED.slice();
+}
+function saveVideos(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(videos)); }catch(e){}
+}
+
+/* ====== استخراج رمز الفيديو من الرابط ====== */
+function getYouTubeID(url){
+  if(!url) return null;
+  url = url.trim();
+  // اذا كتب الرمز مباشرة
+  if(/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+  const patterns = [
+    /youtu\.be\/([a-zA-Z0-9_-]{11})/,
+    /[?&]v=([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/live\/([a-zA-Z0-9_-]{11})/
+  ];
+  for(const p of patterns){
+    const m = url.match(p);
+    if(m) return m[1];
+  }
+  return null;
+}
+
+function thumbUrl(id){ return "https://i.ytimg.com/vi/"+id+"/hqdefault.jpg"; }
+
+/* ====== رسم الشبكة ====== */
+function renderGrid(){
+  const grid = document.getElementById("grid");
+  const empty = document.getElementById("empty");
+  grid.innerHTML = "";
+  if(videos.length === 0){
+    empty.style.display = "block";
+    return;
+  }
+  empty.style.display = "none";
+  videos.forEach((v, i) => {
+    const card = document.createElement("button");
+    card.className = "card";
+    card.style.animationDelay = (i*0.04)+"s";
+    card.onclick = () => playVideo(v.id, v.title);
+    card.innerHTML = `
+      <div class="thumb">
+        <img src="${thumbUrl(v.id)}" alt="" onerror="this.src='https://i.ytimg.com/vi/${v.id}/mqdefault.jpg'">
+        <div class="play"><span><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span></div>
+      </div>
+      <div class="title">${escapeHtml(v.title || "فيديو")}</div>`;
+    grid.appendChild(card);
+  });
+}
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+
+/* ====== المشغّل ====== */
+function onYouTubeIframeAPIReady(){
+  apiReady = true;
+  if(pendingPlayId){ startPlayer(pendingPlayId); pendingPlayId = null; }
+}
+
+function playVideo(id, title){
+  document.getElementById("endCover").classList.remove("show");
+  document.getElementById("playerWrap").classList.add("show");
+  document.getElementById("playerNow").textContent = title || "";
+  if(apiReady){ startPlayer(id); }
+  else { pendingPlayId = id; }
+}
+
+function startPlayer(id){
+  if(player){
+    player.loadVideoById(id);
+    return;
+  }
+  player = new YT.Player("player", {
+    videoId: id,
+    playerVars: {
+      autoplay: 1,
+      rel: 0,            // يقلل الاقتراحات الخارجية
+      modestbranding: 1, // يقلل شعار اليوتيوب
+      playsinline: 1,
+      iv_load_policy: 3, // يخفي التعليقات التفاعلية
+      fs: 1
+    },
+    events: {
+      onStateChange: (e) => {
+        // اول ما يبدأ التشغيل نشغّل المراقبة على الوقت المتبقي
+        if(e.data === YT.PlayerState.PLAYING){
+          startEndWatch();
+        }
+        // لو خلص الفيديو نرجع للشبكة مباشرة
+        if(e.data === YT.PlayerState.ENDED){
+          coverAndClose();
+        }
+      }
+    }
+  });
+}
+
+// مراقبة الوقت: اول ما يقرب الفيديو من النهاية نغطيه بالاسود قبل الاقتراحات
+function startEndWatch(){
+  stopEndWatch();
+  endWatch = setInterval(() => {
+    if(!player || !player.getDuration) return;
+    const dur = player.getDuration();
+    const cur = player.getCurrentTime ? player.getCurrentTime() : 0;
+    if(dur > 0 && (dur - cur) <= END_COVER_SECONDS){
+      coverAndClose();
+    }
+  }, 250);
+}
+function stopEndWatch(){
+  if(endWatch){ clearInterval(endWatch); endWatch = null; }
+}
+
+// نغطي الفيديو بالاسود، نوقفه، وبعدها نرجع للصفحة الرئيسية
+function coverAndClose(){
+  stopEndWatch();
+  if(player && player.pauseVideo) player.pauseVideo();
+  document.getElementById("endCover").classList.add("show");
+  setTimeout(closePlayer, 900);
+}
+
+function closePlayer(){
+  stopEndWatch();
+  document.getElementById("endCover").classList.remove("show");
+  document.getElementById("playerWrap").classList.remove("show");
+  if(player && player.stopVideo) player.stopVideo();
+}
+
+/* ====== لوحة الاباء ====== */
+function openParent(){
+  document.getElementById("parentModal").classList.add("show");
+  document.getElementById("pinScreen").style.display = "block";
+  document.getElementById("manageScreen").style.display = "none";
+  document.getElementById("pinInput").value = "";
+  document.getElementById("pinErr").textContent = "";
+  setTimeout(()=>document.getElementById("pinInput").focus(), 100);
+}
+function closeParent(){
+  document.getElementById("parentModal").classList.remove("show");
+}
+function checkPin(){
+  const val = document.getElementById("pinInput").value.trim();
+  if(val === PARENT_PIN){
+    document.getElementById("pinScreen").style.display = "none";
+    document.getElementById("manageScreen").style.display = "block";
+    renderAdminList();
+  }else{
+    document.getElementById("pinErr").textContent = "الرمز غير صحيح، حاول مرة ثانية.";
+  }
+}
+
+function addVideo(){
+  const urlEl = document.getElementById("urlInput");
+  const titleEl = document.getElementById("titleInput");
+  const errEl = document.getElementById("addErr");
+  const id = getYouTubeID(urlEl.value);
+  if(!id){
+    errEl.textContent = "الرابط غير صحيح، تأكد انه رابط فيديو من اليوتيوب.";
+    return;
+  }
+  if(videos.some(v => v.id === id)){
+    errEl.textContent = "هذا الفيديو مضاف من قبل.";
+    return;
+  }
+  const title = titleEl.value.trim() || "فيديو";
+  videos.push({ id, title });
+  saveVideos();
+  urlEl.value = ""; titleEl.value = ""; errEl.textContent = "";
+  renderAdminList();
+  renderGrid();
+}
+
+function removeVideo(id){
+  videos = videos.filter(v => v.id !== id);
+  saveVideos();
+  renderAdminList();
+  renderGrid();
+}
+
+function renderAdminList(){
+  const list = document.getElementById("adminList");
+  list.innerHTML = "";
+  if(videos.length === 0){
+    list.innerHTML = '<p style="color:var(--muted);font-size:15px">ما فيه فيديوات بعد.</p>';
+    return;
+  }
+  videos.forEach(v => {
+    const row = document.createElement("div");
+    row.className = "vli";
+    row.innerHTML = `
+      <img src="${thumbUrl(v.id)}" alt="" onerror="this.src='https://i.ytimg.com/vi/${v.id}/mqdefault.jpg'">
+      <span class="t">${escapeHtml(v.title || "فيديو")}</span>
+      <button>حذف</button>`;
+    row.querySelector("button").onclick = () => removeVideo(v.id);
+    list.appendChild(row);
+  });
+}
+
+/* ====== ربط الازرار ====== */
+document.getElementById("gearBtn").onclick = openParent;
+document.getElementById("pinInput").addEventListener("keydown", e => { if(e.key === "Enter") checkPin(); });
+document.getElementById("urlInput").addEventListener("keydown", e => { if(e.key === "Enter") addVideo(); });
+document.getElementById("parentModal").addEventListener("click", e => {
+  if(e.target.id === "parentModal") closeParent();
+});
+
+/* ====== تحميل سكربت اليوتيوب ====== */
+(function(){
+  const tag = document.createElement("script");
+  tag.src = "https://www.youtube.com/iframe_api";
+  document.head.appendChild(tag);
+})();
+
+renderGrid();
+</script>
+</body>
+</html>
