@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a0a2e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="الأسماء الحسنى">
+<meta name="description" content="أسماء الله الحسنى مع شرح معانيها وأدعية مقترنة بها">
+<title>أسماء الله الحسنى</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0b0718;
+  --bg2: #110d22;
+  --card: #16102a;
+  --card2: #1e1638;
+  --border: #2e2250;
+  --border2: #3d2f6a;
+  --gold: #d4a853;
+  --gold2: #f0c87a;
+  --gold3: #a07830;
+  --teal: #4ecdc4;
+  --rose: #e07090;
+  --violet: #9b6dff;
+  --text: #f0eaff;
+  --text2: #b8a8d8;
+  --text3: #7860a8;
+  --shadow: rgba(100, 60, 200, 0.15);
+  --font-scale: 1;
+  --transition: 0.5s cubic-bezier(0.4,0,0.2,1);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html { scroll-behavior:smooth; }
+
+body {
+  font-family: 'Noto Naskh Arabic', serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Starfield background */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(120,60,220,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(60,180,160,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(200,120,60,0.06) 0%, transparent 70%);
+}
+
+/* Geometric ornament top */
+.page-ornament {
+  position: relative; z-index:2;
+  text-align:center; padding: 52px 20px 0;
+}
+
+.ornament-star {
+  display: inline-block;
+  width: 80px; height: 80px;
+  position: relative; margin-bottom: 20px;
+}
+
+.ornament-star svg { width:100%; height:100%; }
+
+.page-title {
+  font-family: 'Amiri', serif;
+  font-size: clamp(32px,6vw,52px);
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--gold2) 0%, var(--gold) 40%, var(--rose) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  color: var(--text3);
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.page-ayah {
+  font-family: 'Amiri Quran', serif;
+  font-size: calc(17px * var(--font-scale));
+  color: var(--text2);
+  line-height: 2;
+  max-width: 600px;
+  margin: 0 auto 8px;
+  opacity: 0.8;
+}
+
+.page-ayah-ref {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 40px;
+}
+
+/* Divider */
+.ornament-divider {
+  display:flex; align-items:center; gap:16px;
+  max-width:400px; margin: 0 auto 48px; padding: 0 20px;
+}
+.ornament-divider-line { flex:1; height:1px; background: linear-gradient(to left, transparent, var(--border2), transparent); }
+.ornament-divider-dot { width:6px; height:6px; border-radius:50%; background:var(--gold); opacity:0.6; }
+
+/* Controls */
+.controls {
+  display:flex; align-items:center; justify-content:center;
+  gap:12px; flex-wrap:wrap;
+  padding: 0 20px 40px;
+  position:relative; z-index:10;
+}
+
+.search-wrap {
+  position: relative; flex: 1; max-width: 280px;
+}
+.search-input {
+  width:100%; padding: 11px 40px 11px 16px;
+  border-radius: 50px; border: 1.5px solid var(--border2);
+  background: var(--card); color: var(--text);
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: calc(14px * var(--font-scale));
+  outline: none; transition: all 0.3s;
+}
+.search-input::placeholder { color: var(--text3); }
+.search-input:focus { border-color: var(--gold3); box-shadow: 0 0 0 3px rgba(212,168,83,0.1); }
+.search-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); opacity:0.4; font-size:16px; }
+
+.font-ctrl {
+  display:flex; align-items:center; gap:8px;
+  padding: 9px 16px; border-radius:50px;
+  border: 1.5px solid var(--border2);
+  background: var(--card);
+}
+.font-ctrl-label { font-size:11px; color:var(--text3); font-weight:600; letter-spacing:1px; }
+.font-btn {
+  width:28px; height:28px; border-radius:50%; border:none; cursor:pointer;
+  background: var(--gold3); color:#fff;
+  font-size:15px; font-weight:700;
+  display:flex; align-items:center; justify-content:center;
+  transition: all 0.2s;
+}
+.font-btn:active { transform:scale(0.88); }
+.font-size-display { font-size:12px; color:var(--text2); font-weight:700; min-width:20px; text-align:center; }
+
+.count-badge {
+  padding: 9px 16px; border-radius:50px;
+  border: 1.5px solid var(--border); background: var(--card);
+  font-size:12px; color:var(--text3);
+}
+.count-badge span { color:var(--gold); font-weight:700; }
+
+/* Grid */
+.names-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px,1fr));
+  gap:20px;
+  max-width:1280px;
+  margin:0 auto;
+  padding: 0 20px 80px;
+  position:relative; z-index:10;
+}
+
+/* Card */
+.name-card {
+  border-radius: 22px;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  position:relative; overflow:hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s;
+  animation: fadeUp 0.5s ease both;
+  cursor: default;
+}
+
+.name-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px var(--shadow);
+  border-color: var(--border2);
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* Card accent top bar with gradient per card */
+.card-accent {
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+  margin-bottom: 0;
+}
+
+/* Card inner */
+.card-inner { padding: 26px 24px 20px; }
+
+/* Number */
+.card-num {
+  position:absolute; top:14px; left:18px;
+  font-family:'Amiri',serif; font-size:42px; font-weight:700;
+  opacity:0.05; line-height:1; color:var(--gold2);
+  transition: opacity 0.3s;
+}
+.name-card:hover .card-num { opacity:0.09; }
+
+/* Name */
+.card-name-wrap {
+  text-align: center;
+  margin-bottom: 18px;
+  padding: 12px 8px 8px;
+  background: var(--card2);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+.card-name {
+  font-family:'Amiri','Noto Naskh Arabic',serif;
+  font-size: calc(26px * var(--font-scale));
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--gold2);
+  display: block;
+  width: 100%;
+}
+.card-transliteration {
+  font-size: calc(11px * var(--font-scale));
+  color: var(--text3); letter-spacing: 1.5px;
+  margin-top: 4px; direction: ltr;
+}
+
+/* Meaning box */
+.card-meaning-box {
+  border-radius:12px; padding:16px;
+  background: var(--card2);
+  border: 1px solid var(--border);
+  margin-bottom:16px;
+}
+.card-meaning-label {
+  font-size:10px; font-weight:700; letter-spacing:2px;
+  color:var(--text3); margin-bottom:8px; opacity:0.8;
+}
+.card-meaning-text {
+  font-size: calc(14px * var(--font-scale));
+  line-height:1.9; color:var(--text2);
+}
+
+/* Dua box */
+.card-dua-box {
+  border-radius:12px; padding:16px;
+  background: linear-gradient(135deg, rgba(212,168,83,0.06), rgba(155,109,255,0.06));
+  border: 1px solid rgba(212,168,83,0.2);
+  margin-bottom:14px;
+}
+.card-dua-label {
+  font-size:10px; font-weight:700; letter-spacing:2px;
+  color:var(--gold3); margin-bottom:10px;
+}
+.card-dua-text {
+  font-family:'Amiri Quran','Amiri',serif;
+  font-size: calc(16px * var(--font-scale));
+  line-height:2.1; color:var(--text); text-align:center;
+}
+
+/* Share button */
+.card-footer {
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding-top:12px;
+  border-top:1px solid var(--border);
+}
+.card-index-badge {
+  font-size:11px; color:var(--text3); opacity:0.6;
+  font-weight:600;
+}
+.share-btn {
+  display:flex; align-items:center; gap:7px;
+  padding: 8px 16px; border-radius:20px; border:none; cursor:pointer;
+  font-family:'Noto Naskh Arabic',serif;
+  font-size: calc(12px * var(--font-scale));
+  font-weight:700; transition:all 0.2s;
+  background: linear-gradient(135deg, rgba(212,168,83,0.15), rgba(155,109,255,0.15));
+  color: var(--gold);
+  border: 1px solid rgba(212,168,83,0.25);
+}
+.share-btn:hover { background: linear-gradient(135deg, rgba(212,168,83,0.25), rgba(155,109,255,0.25)); transform:scale(1.03); }
+.share-btn:active { transform:scale(0.95); }
+.share-icon { font-size:15px; }
+
+/* Toast */
+#toast {
+  position:fixed; bottom:30px; left:50%; transform:translateX(-50%) translateY(20px);
+  background: var(--card2); border:1.5px solid var(--border2);
+  color:var(--gold2); padding:12px 24px; border-radius:16px;
+  font-size:14px; font-weight:600;
+  opacity:0; pointer-events:none;
+  transition: all 0.35s ease; z-index:9999;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  white-space: nowrap;
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* No results */
+.no-results {
+  grid-column:1/-1; text-align:center;
+  padding:60px 20px; color:var(--text3);
+  font-size:16px;
+}
+
+/* Footer */
+.page-footer {
+  grid-column:1/-1; text-align:center;
+  font-size:12px; color:var(--text3);
+  padding:24px; border-radius:16px;
+  border:1px dashed var(--border);
+  line-height:2;
+}
+.page-footer strong { color:var(--gold3); }
+
+/* Accent colors per card group */
+.accent-gold  { background: linear-gradient(90deg,#d4a853,#f0c87a); }
+.accent-teal  { background: linear-gradient(90deg,#4ecdc4,#80ded9); }
+.accent-rose  { background: linear-gradient(90deg,#e07090,#f0a0b8); }
+.accent-violet{ background: linear-gradient(90deg,#9b6dff,#c0a0ff); }
+.accent-blue  { background: linear-gradient(90deg,#5090e0,#80b8f8); }
+.accent-green { background: linear-gradient(90deg,#50c878,#80e0a0); }
+
+@media(max-width:600px){
+  .names-grid { grid-template-columns:1fr; gap:16px; padding:0 14px 80px; }
+  .card-inner { padding:22px 18px 18px; }
+}
+</style>
+</head>
+<body>
+
+<div id="toast">&#10003; تم النسخ</div>
+
+<div class="page-ornament">
+  <div class="ornament-star">
+    <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M40 4 L44 34 L74 34 L50 52 L60 80 L40 62 L20 80 L30 52 L6 34 L36 34 Z" fill="none" stroke="#d4a853" stroke-width="1" opacity="0.6"/>
+      <path d="M40 14 L43 32 L60 32 L47 42 L52 60 L40 50 L28 60 L33 42 L20 32 L37 32 Z" fill="rgba(212,168,83,0.1)" stroke="#d4a853" stroke-width="0.5" opacity="0.8"/>
+      <circle cx="40" cy="40" r="6" fill="rgba(212,168,83,0.3)"/>
+      <circle cx="40" cy="40" r="3" fill="#d4a853"/>
+    </svg>
+  </div>
+  <h1 class="page-title">أسماء الله الحسنى</h1>
+  <p class="page-subtitle">THE 99 BEAUTIFUL NAMES</p>
+  <p class="page-ayah">وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا</p>
+  <p class="page-ayah-ref">سورة الأعراف, الآية 180</p>
+</div>
+
+<div class="ornament-divider">
+  <div class="ornament-divider-line"></div>
+  <div class="ornament-divider-dot"></div>
+  <div class="ornament-divider-line"></div>
+</div>
+
+<div class="controls">
+  <div class="search-wrap">
+    <input class="search-input" type="text" placeholder="ابحث عن اسم..." id="searchInput" oninput="filterNames()">
+    <span class="search-icon">&#128269;</span>
+  </div>
+  <div class="font-ctrl">
+    <span class="font-ctrl-label">الخط</span>
+    <button class="font-btn" onclick="changeFont(-1)">−</button>
+    <span class="font-size-display" id="fontDisplay">م</span>
+    <button class="font-btn" onclick="changeFont(1)">+</button>
+  </div>
+  <div class="count-badge">يُعرض <span id="countDisplay">99</span> اسماً</div>
+</div>
+
+<div class="names-grid" id="namesGrid"></div>
+
+<script>
+const asma = [
+  { num:1,  name:"الله",       trans:"ALLAH",         accent:"accent-gold",
+    meaning:"الاسم الأعظم الجامع لجميع صفات الكمال والجلال والجمال, الذي تعبّده الخلق وتألهه القلوب.",
+    dua:"اللهم أنت الله لا إله إلا أنت, أسألك أن تجعل قلبي ثابتاً على دينك ومحبتك." },
+  { num:2,  name:"الرحمن",     trans:"AR-RAHMAN",     accent:"accent-rose",
+    meaning:"واسع الرحمة التي تشمل جميع الخلق في الدنيا, مؤمنهم وكافرهم.",
+    dua:"يا رحمن الدنيا والآخرة, ارحمني برحمتك الواسعة وأدخلني في عبادك الصالحين." },
+  { num:3,  name:"الرحيم",     trans:"AR-RAHEEM",     accent:"accent-rose",
+    meaning:"خاص الرحمة بالمؤمنين يوم القيامة, رحمة كاملة دائمة لأهل الإيمان.",
+    dua:"يا رحيم, ارحمني يوم لا ينفع مال ولا بنون إلا من أتى الله بقلب سليم." },
+  { num:4,  name:"الملك",      trans:"AL-MALIK",      accent:"accent-violet",
+    meaning:"المالك لجميع الوجود, الذي يتصرف في ملكه كيف يشاء بلا شريك ولا منازع.",
+    dua:"يا ملك الملوك, اجعلني من عبادك المخلصين ولا تجعل الدنيا أكبر همي." },
+  { num:5,  name:"القدوس",     trans:"AL-QUDDUS",     accent:"accent-teal",
+    meaning:"المنزّه عن كل نقص وعيب, الطاهر من كل سوء, المقدّس في ذاته وصفاته.",
+    dua:"يا قدوس, طهّر قلبي من الرياء والحسد والغل, وانقِ روحي مما يشوبها." },
+  { num:6,  name:"السلام",     trans:"AS-SALAM",      accent:"accent-teal",
+    meaning:"ذو السلامة من كل نقص, ومصدر السلام لخلقه, ومن تحيته لأهل الجنة السلام.",
+    dua:"يا سلام, سلّم قلبي من الوساوس وبدني من الأمراض وحياتي من الفتن." },
+  { num:7,  name:"المؤمن",     trans:"AL-MU'MIN",     accent:"accent-blue",
+    meaning:"الذي أمّن عباده من ظلمه, وصدّق رسله, ويؤمّن المؤمنين يوم القيامة.",
+    dua:"يا مؤمن, أمّن خوفي وثبّت إيماني وأنر قلبي بنور اليقين." },
+  { num:8,  name:"المهيمن",    trans:"AL-MUHAYMIN",   accent:"accent-violet",
+    meaning:"الرقيب على خلقه الحافظ لهم, المطلع على أحوالهم, الشاهد على أعمالهم.",
+    dua:"يا مهيمن, كن رقيباً على أعمالي وأصلح أحوالي وأحفظني بحفظك." },
+  { num:9,  name:"العزيز",     trans:"AL-AZEEZ",      accent:"accent-gold",
+    meaning:"الغالب الذي لا يُغلب, القوي الذي لا يُقهر, المنيع الذي لا يُنال.",
+    dua:"يا عزيز, أعزّني بطاعتك ولا تذلّني بمعصيتك, واجعل عزّي في قربك." },
+  { num:10, name:"الجبار",     trans:"AL-JABBAR",     accent:"accent-rose",
+    meaning:"القهّار لخلقه بقدرته, الذي يجبر الكسير ويغني الفقير ويعلو على كل شيء.",
+    dua:"يا جبار, اجبر كسر قلبي وأغنِ فقري وارفع ما أثقل ظهري." },
+  { num:11, name:"المتكبر",    trans:"AL-MUTAKABBIR", accent:"accent-violet",
+    meaning:"الكبير المتعالي عن صفات الخلق, المستحق وحده للكبرياء والعظمة.",
+    dua:"يا متكبر, أذهب عن قلبي الكبر والعجب وأرني عظمتك لأعرف حقيقة نفسي." },
+  { num:12, name:"الخالق",     trans:"AL-KHALIQ",     accent:"accent-teal",
+    meaning:"الموجِد للأشياء من العدم, المصوّر لها على ما يشاء بلا مثال سابق.",
+    dua:"يا خالق, اخلق في قلبي محبتك وفي روحي الإنابة إليك وفي حياتي البركة." },
+  { num:13, name:"البارئ",     trans:"AL-BARI'",      accent:"accent-teal",
+    meaning:"الذي برأ الخلق وفصل بعضه من بعض وأوجده على هيئته المخصوصة.",
+    dua:"يا بارئ, براءً خلقتني فصنّي وأصلح ما أفسدته من نفسي." },
+  { num:14, name:"المصوّر",    trans:"AL-MUSAWWIR",   accent:"accent-teal",
+    meaning:"الذي صوّر كل موجود وأعطاه صورته الخاصة التي تميزه من غيره.",
+    dua:"يا مصوّر, صوّر حياتي على ما يُرضيك وجمّل سيرتي وأحسن خاتمتي." },
+  { num:15, name:"الغفار",     trans:"AL-GHAFFAR",    accent:"accent-green",
+    meaning:"كثير المغفرة, يغفر الذنوب مراراً لمن تاب ورجع, مهما تكررت الذنوب.",
+    dua:"يا غفار, اغفر لي ما قدّمت وما أخّرت وما أسررت وما أعلنت." },
+  { num:16, name:"القهار",     trans:"AL-QAHHAR",     accent:"accent-rose",
+    meaning:"الغالب لكل شيء, القاهر لكل موجود, الذي خضعت له الرقاب وذلّت له الجبابرة.",
+    dua:"يا قهار, اقهر شهواتي التي تعصيك وأخضع نفسي الأمارة بالسوء لأمرك." },
+  { num:17, name:"الوهاب",     trans:"AL-WAHHAB",     accent:"accent-gold",
+    meaning:"كثير الهبات والعطايا, يهب بلا عوض ولا انتظار مقابل, هباته دائمة متجددة.",
+    dua:"يا وهاب, هب لي من لدنك رحمة وعلماً نافعاً وقلباً خاشعاً وذرية صالحة." },
+  { num:18, name:"الرزاق",     trans:"AR-RAZZAQ",     accent:"accent-green",
+    meaning:"الذي يرزق جميع الخلق رزقاً ظاهراً وباطناً, حتى الجنين في بطن أمه.",
+    dua:"يا رزاق, ارزقني رزقاً حلالاً طيباً واسعاً يكفيني عن سؤال خلقك." },
+  { num:19, name:"الفتاح",     trans:"AL-FATTAH",     accent:"accent-blue",
+    meaning:"فتّاح أبواب الرحمة والرزق والنصر, يفتح ما استغلق من أمور الدنيا والآخرة.",
+    dua:"يا فتاح, افتح لي أبواب رحمتك ورزقك وعلمك وافتح قلبي لكتابك." },
+  { num:20, name:"العليم",     trans:"AL-ALEEM",      accent:"accent-violet",
+    meaning:"المحيط علمه بكل شيء ظاهر وخفي, يعلم ما كان وما يكون وما لم يكن.",
+    dua:"يا عليم, علّمني ما ينفعني وانفعني بما علّمتني وزدني علماً." },
+  { num:21, name:"القابض",     trans:"AL-QABID",      accent:"accent-rose",
+    meaning:"الذي يقبض الأرواح والأرزاق بحكمته, يضيّق على من يشاء لحكمة بالغة.",
+    dua:"يا قابض, اقبض ما في نفسي من حب الدنيا وضيّق علي طرق المعصية." },
+  { num:22, name:"الباسط",     trans:"AL-BASIT",      accent:"accent-green",
+    meaning:"الذي يبسط الأرزاق والرحمة على من يشاء بفضله وكرمه.",
+    dua:"يا باسط, ابسط علينا من فضلك وسع لنا في أرزاقنا ويسّر لنا أمورنا." },
+  { num:23, name:"الخافض",     trans:"AL-KHAFID",     accent:"accent-rose",
+    meaning:"الذي يخفض أهل الظلم والكبر ويضعهم, وهو عدل في خفضه وتنزيله.",
+    dua:"يا خافض, اخفض نفسي بالتواضع وأذلّ في نفسي كبرياء الشيطان." },
+  { num:24, name:"الرافع",     trans:"AR-RAFI'",      accent:"accent-teal",
+    meaning:"الذي يرفع المؤمنين بطاعتهم والأولياء بكرامتهم فوق غيرهم.",
+    dua:"يا رافع, ارفع درجتي في الدنيا والآخرة وارفع ذكري بطاعتك." },
+  { num:25, name:"المعز",      trans:"AL-MU'IZZ",     accent:"accent-gold",
+    meaning:"الذي يعطي العزة لمن يشاء من عباده, وعزته لا تُنال إلا بطاعته.",
+    dua:"يا معز, أعزّني بالإسلام وأعزّني بالتقوى ولا تجعلني أطلب العز من سواك." },
+  { num:26, name:"المذل",      trans:"AL-MUZILL",     accent:"accent-rose",
+    meaning:"الذي يذل الكافرين والمتكبرين والظالمين, ويضعهم في مواضع الذل.",
+    dua:"يا مذل, أذلّ في نفسي الهوى والشيطان ولا تُسلّط عليّ من لا يخافك." },
+  { num:27, name:"السميع",     trans:"AS-SAMEE'",     accent:"accent-blue",
+    meaning:"الذي يسمع كل صوت خفياً كان أو جلياً, يسمع السر ودبيب النملة في الظلام.",
+    dua:"يا سميع, اسمع دعائي وشكواي وأجب نداءاتي, فأنت أقرب من يُسمع." },
+  { num:28, name:"البصير",     trans:"AL-BASEER",     accent:"accent-blue",
+    meaning:"المحيط بصره بكل شيء مرئي, يرى ما خفي في ظلمات البر والبحر.",
+    dua:"يا بصير, بصّرني بعيوب نفسي وأرني الحق حقاً وأعنّي على اتباعه." },
+  { num:29, name:"الحكم",      trans:"AL-HAKAM",      accent:"accent-violet",
+    meaning:"الحاكم الفاصل بين الخلق بالعدل, حكمه نافذ لا معقب له ولا راد.",
+    dua:"يا حكم, احكم بيني وبين من ظلمني وأصلح بين المتخاصمين من عبادك." },
+  { num:30, name:"العدل",      trans:"AL-ADL",        accent:"accent-teal",
+    meaning:"البالغ في العدل غايته, الذي لا يجور في حكمه ولا يظلم مثقال ذرة.",
+    dua:"يا عدل, أعدّلني على الحق ولا تجعل في قلبي ميلاً لظلم أحد." },
+  { num:31, name:"اللطيف",     trans:"AL-LATEEF",     accent:"accent-rose",
+    meaning:"الرفيق بعباده الذي يوصل إليهم المصالح برفق وخفاء لا يعلمونه.",
+    dua:"يا لطيف, الطف بي في أموري كلها برفقك الخفي وعنايتك الدائمة." },
+  { num:32, name:"الخبير",     trans:"AL-KHABEER",    accent:"accent-violet",
+    meaning:"المطلع على خفايا الأمور وبواطنها, العالم بدقائق الأشياء وخباياها.",
+    dua:"يا خبير, أعلم خبيئة قلبي وأصلح ما خفي من فسادي وما ظهر." },
+  { num:33, name:"الحليم",     trans:"AL-HALEEM",     accent:"accent-green",
+    meaning:"الذي لا يعجل بالعقوبة على من عصاه, يمهل ولا يهمل, وعفوه أوسع من غضبه.",
+    dua:"يا حليم, تجاوز عن جهلي وتحلّم على سفهي كما تحلّمت على من أساء." },
+  { num:34, name:"العظيم",     trans:"AL-AZEEM",      accent:"accent-gold",
+    meaning:"ذو العظمة المطلقة التي لا تُحاط, الكبير الذي تصغر دونه كل عظمة.",
+    dua:"يا عظيم, عظّم في قلبي شأنك وهوّن عليّ ما سواك من المصائب والملمات." },
+  { num:35, name:"الغفور",     trans:"AL-GHAFOOR",    accent:"accent-green",
+    meaning:"كثير المغفرة, يغفر الذنوب العظيمة لمن يشاء, مغفرته سابغة شاملة.",
+    dua:"يا غفور, اغفر لي ولوالديّ وللمؤمنين جميعاً وامح ذنوبنا بفضلك." },
+  { num:36, name:"الشكور",     trans:"ASH-SHAKOOR",   accent:"accent-gold",
+    meaning:"الذي يشكر القليل من عمل عباده ويجازيهم عليه أضعافاً مضاعفة.",
+    dua:"يا شكور, اجعلني شاكراً لنعمتك عليّ ووفّقني للعمل الذي يستحق شكرك." },
+  { num:37, name:"العلي",      trans:"AL-ALI",        accent:"accent-violet",
+    meaning:"المتعالي على خلقه بذاته وقهره, العالي الذي لا شيء فوقه ولا مثل له.",
+    dua:"يا علي, علِّ همتي إلى ما يُرضيك وارفع بصري عن الدنيا إلى ما هو أعلى." },
+  { num:38, name:"الكبير",     trans:"AL-KABEER",     accent:"accent-gold",
+    meaning:"الكبير الذي لا يُكتنه كبره, المتصف بصفات الكمال الثابتة الدائمة.",
+    dua:"يا كبير, كبّر الله في قلبي حتى لا يستكبر قلبي على أحد من خلقك." },
+  { num:39, name:"الحفيظ",     trans:"AL-HAFEEZ",     accent:"accent-blue",
+    meaning:"الحافظ لكل شيء, يحفظ أعمال العباد وأرزاقهم وآجالهم بدقة تامة.",
+    dua:"يا حفيظ, احفظني من بين يديّ ومن خلفي وعن يميني وعن شمالي ومن فوقي." },
+  { num:40, name:"المقيت",     trans:"AL-MUQEET",     accent:"accent-green",
+    meaning:"الذي يُقيت خلقه ويرزقهم أقواتهم, القادر على كل شيء الشهيد على كل شيء.",
+    dua:"يا مقيت, أقت قلبي بالإيمان وروحي بالذكر وجسدي بالحلال الطيب." },
+  { num:41, name:"الحسيب",     trans:"AL-HASEEB",     accent:"accent-violet",
+    meaning:"الكافي لعباده, المحاسب لهم على أعمالهم, الذي يكفي من توكل عليه.",
+    dua:"يا حسيب, حاسبني حساباً يسيراً واكفني شر ما أخشاه يوم العرض عليك." },
+  { num:42, name:"الجليل",     trans:"AL-JALEEL",     accent:"accent-gold",
+    meaning:"ذو الجلال والعظمة, الجميل في صفاته وأفعاله, الكبير المتعالي.",
+    dua:"يا جليل, أجلّ ذكرك في قلبي وعلى لساني وأجلّني بطاعتك أمام خلقك." },
+  { num:43, name:"الكريم",     trans:"AL-KAREEM",     accent:"accent-gold",
+    meaning:"الكثير الخير والعطاء, الذي لا ينفد عطاؤه, يعطي ويجود بلا حساب.",
+    dua:"يا كريم, تكرّم عليّ بعفوك ولا تحرمني خيرك وجد علي من فضلك الواسع." },
+  { num:44, name:"الرقيب",     trans:"AR-RAQEEB",     accent:"accent-rose",
+    meaning:"المراقب لأعمال العباد وأحوالهم, لا يغيب عنه شيء في السماوات والأرض.",
+    dua:"يا رقيب, راقبني في سري وعلنيتي وخفّ وطأة مراقبتي على قلبي." },
+  { num:45, name:"المجيب",     trans:"AL-MUJEEB",     accent:"accent-teal",
+    meaning:"الذي يجيب دعوة الداعي إذا دعاه, لا يُرد عنه سائل ولا يخيب لديه راجٍ.",
+    dua:"يا مجيب, أجب دعائي واقبل توبتي كما أجبت دعاء يونس في بطن الحوت." },
+  { num:46, name:"الواسع",     trans:"AL-WASI'",      accent:"accent-blue",
+    meaning:"الواسع العلم والقدرة والرحمة, وسعت رحمته كل شيء وأحاط علمه بكل مخلوق.",
+    dua:"يا واسع, سع لي في رزقي وعلمي ورحمتك وأخرجني من ضيق إلى سعة." },
+  { num:47, name:"الحكيم",     trans:"AL-HAKEEM",     accent:"accent-violet",
+    meaning:"المتقن في أفعاله وأحكامه, الذي يضع كل شيء في موضعه بحكمة بالغة.",
+    dua:"يا حكيم, أحكم تدبير حياتي وأرني الحكمة في ما يصيبني من خير وشر." },
+  { num:48, name:"الودود",     trans:"AL-WADOOD",     accent:"accent-rose",
+    meaning:"المحب لعباده المؤمنين, الذي يضع لهم المحبة في قلوب الخلق.",
+    dua:"يا ودود, ضع لي المحبة في قلوب المؤمنين وضع في قلبي محبتك وخشيتك." },
+  { num:49, name:"المجيد",     trans:"AL-MAJEED",     accent:"accent-gold",
+    meaning:"الشريف العالي الذات, الكثير الخير والجود, العظيم في ذاته وصفاته.",
+    dua:"يا مجيد, مجّدك لساني وعظّمك قلبي وكن لي ذخراً يوم لقائك." },
+  { num:50, name:"الباعث",     trans:"AL-BA'ITH",     accent:"accent-violet",
+    meaning:"الذي يبعث الخلق يوم القيامة للحساب والجزاء, ويبعث الرسل بالهداية.",
+    dua:"يا باعث, ابعثني يوم القيامة مع الصالحين وأدخلني في جملة المفلحين." },
+  { num:51, name:"الشهيد",     trans:"ASH-SHAHEED",   accent:"accent-blue",
+    meaning:"الحاضر الذي لا يغيب, الشاهد على كل شيء في كل وقت ومكان.",
+    dua:"يا شهيد, أشهد أعمالي فأحسنها وكن شاهداً لي لا عليّ يوم الحساب." },
+  { num:52, name:"الحق",       trans:"AL-HAQQ",       accent:"accent-teal",
+    meaning:"الثابت الوجود المتحقق بكل كمال, الذي يُحق الحق ويُبطل الباطل.",
+    dua:"يا حق, ثبّتني على الحق وأرني الحق حقاً وارزقني اتباعه." },
+  { num:53, name:"الوكيل",     trans:"AL-WAKEEL",     accent:"accent-blue",
+    meaning:"الكافي لمن توكل عليه, القائم بمصالح عباده, الثقة لمن فوّض أمره إليه.",
+    dua:"يا وكيل, فوّضت أمري إليك فتوكّل عني وكفّ عني شر كل ذي شر." },
+  { num:54, name:"القوي",      trans:"AL-QAWIYY",     accent:"accent-rose",
+    meaning:"الشديد القوة التي لا يعجزها شيء, قوة كاملة لا نقص فيها ولا ضعف.",
+    dua:"يا قوي, قوّ إيماني وقوّ عزيمتي على طاعتك وأضعف في نفسي كل معصية." },
+  { num:55, name:"المتين",     trans:"AL-MATEEN",     accent:"accent-rose",
+    meaning:"الشديد المتمكن في قدرته ومكانته, الذي لا يعتريه تعب ولا وهن.",
+    dua:"يا متين, أعنّي على طاعتك ولا تكلني إلى نفسي الضعيفة طرفة عين." },
+  { num:56, name:"الوليّ",     trans:"AL-WALIYY",     accent:"accent-violet",
+    meaning:"ناصر عباده المؤمنين ومحبهم, يتولى شؤونهم ويدبر أمورهم.",
+    dua:"يا وليّ, تولّني بولايتك وكن لي ناصراً ومعيناً في الدنيا والآخرة." },
+  { num:57, name:"الحميد",     trans:"AL-HAMEED",     accent:"accent-gold",
+    meaning:"المحمود في ذاته وصفاته وأفعاله, المستحق للحمد والثناء على كل حال.",
+    dua:"يا حميد, الحمد لك على كل حال واجعل الحمد أول كلامي وآخره." },
+  { num:58, name:"المحصي",     trans:"AL-MUHSEE",     accent:"accent-blue",
+    meaning:"الذي أحصى كل شيء وعلمه بلا نقصان, لا يفوته شيء مهما دق وصغر.",
+    dua:"يا محصي, أحصِ لي حسناتي وضاعفها واجعل ميزاني ثقيلاً يوم اللقاء." },
+  { num:59, name:"المبدئ",     trans:"AL-MUBDI'",     accent:"accent-teal",
+    meaning:"الذي أبدأ الخلق أول مرة من غير مثال سابق ولا مادة قبله.",
+    dua:"يا مبدئ, ابدأ بي حياة جديدة في طاعتك وأنشئ في روحي بداية صادقة." },
+  { num:60, name:"المعيد",     trans:"AL-MU'EED",     accent:"accent-teal",
+    meaning:"الذي يُعيد الخلق بعد إفنائهم يوم القيامة كما بدأهم سبحانه.",
+    dua:"يا معيد, أعدني إلى رحمتك كلما ابتعدت وأعد لي ما فات من توبة وصلاح." },
+  { num:61, name:"المحيي",     trans:"AL-MUHYEE",     accent:"accent-green",
+    meaning:"الذي يهب الحياة لمن يشاء ويحيي القلوب بالهداية والإيمان.",
+    dua:"يا محيي, أحيِ قلبي بذكرك وأحيِ روحي بطاعتك وأحيِ فيّ سنة نبيك." },
+  { num:62, name:"المميت",     trans:"AL-MUMEET",     accent:"accent-rose",
+    meaning:"الذي يميت الأحياء عند آجالهم, وبيده وحده أمر الموت والحياة.",
+    dua:"يا مميت, أمتني على الإسلام وارزقني حسن الختام وأعذني من سوء الحال عند الموت." },
+  { num:63, name:"الحي",       trans:"AL-HAYY",       accent:"accent-green",
+    meaning:"الحي الدائم الأبدي الذي لا يموت ولا يفنى, حياته كاملة من كل وجه.",
+    dua:"يا حي يا قيوم, برحمتك أستغيث فأصلح لي شأني كله ولا تكلني إلى نفسي." },
+  { num:64, name:"القيوم",     trans:"AL-QAYYUM",     accent:"accent-gold",
+    meaning:"القائم بنفسه المقيم لغيره, الذي يقوم بتدبير خلقه وأمور عباده.",
+    dua:"يا قيوم, أقم لي شأني وثبّتني على الحق ولا تكلني إلى نفسي طرفة عين." },
+  { num:65, name:"الواجد",     trans:"AL-WAJID",      accent:"accent-gold",
+    meaning:"الغني الذي لا يفتقر إلى شيء, الذي يجد ما يريد متى يريد.",
+    dua:"يا واجد, أغنني بما وجدت لديك واجعلني غنياً بك لا بسواك." },
+  { num:66, name:"الماجد",     trans:"AL-MAJID",      accent:"accent-gold",
+    meaning:"الكريم الواسع الفضل, ذو الشرف الرفيع والمجد العظيم.",
+    dua:"يا ماجد, مجّدك فعلي وعملي وكن لي فخراً يوم لا فخر إلا بك." },
+  { num:67, name:"الواحد",     trans:"AL-WAHID",      accent:"accent-teal",
+    meaning:"المنفرد بصفات الكمال, الذي لا شريك له ولا شبيه في ذاته وصفاته.",
+    dua:"يا واحد, أخلص لك عبادتي ووحّد قلبي لمحبتك ولا تجعل فيه لسواك نصيباً." },
+  { num:68, name:"الأحد",      trans:"AL-AHAD",       accent:"accent-teal",
+    meaning:"الفرد الصمد الذي لم يلد ولم يولد ولم يكن له كفواً أحد.",
+    dua:"يا أحد, بأحديتك أتوسل إليك أن تجمع قلبي على توحيدك وإخلاص عبادتك." },
+  { num:69, name:"الصمد",      trans:"AS-SAMAD",      accent:"accent-violet",
+    meaning:"السيد الكامل الذي يصمد إليه الخلق في حوائجهم, الغني عن كل شيء.",
+    dua:"يا صمد, إليك أصمد في كل حاجة واجعلني لا أصمد في حاجتي إلا إليك." },
+  { num:70, name:"القادر",     trans:"AL-QADIR",      accent:"accent-blue",
+    meaning:"القادر على كل شيء بلا عجز ولا قصور, قدرته كاملة شاملة لكل ممكن.",
+    dua:"يا قادر, اقدر لي الخير أينما كان ويسّر لي بلوغه وأعنّي عليه." },
+  { num:71, name:"المقتدر",    trans:"AL-MUQTADIR",   accent:"accent-blue",
+    meaning:"البالغ في القدرة غايتها, الذي لا يُعجزه شيء, قادر على ما يشاء متى يشاء.",
+    dua:"يا مقتدر, اقتدر لي على أعدائي واقتدر لي على نفسي ومن تسويف التوبة." },
+  { num:72, name:"المقدّم",    trans:"AL-MUQADDIM",   accent:"accent-rose",
+    meaning:"الذي يقدّم ما يشاء من خلقه أو أعمالهم أو أرزاقهم بحكمته.",
+    dua:"يا مقدّم, قدّمني بين يدي رحمتك ولا تؤخرني عن ركب أهل الصلاح والتقوى." },
+  { num:73, name:"المؤخّر",    trans:"AL-MU'AKHKHIR", accent:"accent-rose",
+    meaning:"الذي يؤخر ما يشاء ويضع الأشياء في أوقاتها المناسبة بحكمته.",
+    dua:"يا مؤخّر, أخّر عني الفتن وأخّر عني الموت حتى أتوب وأصلح حالي." },
+  { num:74, name:"الأول",      trans:"AL-AWWAL",      accent:"accent-gold",
+    meaning:"الذي ليس قبله شيء, السابق على كل موجود, الأول بلا ابتداء.",
+    dua:"يا أول, اجعل أول اهتمامي طاعتك واجعل أول ما يخطر ببالي ذكرك." },
+  { num:75, name:"الآخر",      trans:"AL-AKHIR",      accent:"accent-gold",
+    meaning:"الذي ليس بعده شيء, الباقي بعد فناء الخلق, الآخر بلا انتهاء.",
+    dua:"يا آخر, اجعل آخر عملي أحسنه وخاتمتي التوبة وكلمة التوحيد." },
+  { num:76, name:"الظاهر",     trans:"AZ-ZAHIR",      accent:"accent-teal",
+    meaning:"الذي ظهرت دلائله وبيناته فعُرف بآياته وعلا فوق خلقه.",
+    dua:"يا ظاهر, أظهر لي من الحق ما أهتدي به ومن الباطل ما أتقيه." },
+  { num:77, name:"الباطن",     trans:"AL-BATIN",      accent:"accent-violet",
+    meaning:"الذي بطن علمه في كل شيء وأحاط بكل خفيّة ودقيقة.",
+    dua:"يا باطن, أصلح ما بطن من أمري كما أصلحت ما ظهر, وطهّر سريرتي." },
+  { num:78, name:"الوالي",     trans:"AL-WALEE",      accent:"accent-green",
+    meaning:"المالك لجميع الأشياء المتصرف فيها, القائم على تدبير شؤون خلقه.",
+    dua:"يا والي, تولّ أمري في الدنيا والآخرة وأصلح شأني ظاهراً وباطناً." },
+  { num:79, name:"المتعالي",   trans:"AL-MUTA'ALI",   accent:"accent-gold",
+    meaning:"العالي العظيم الذي تعالى عن صفات النقص وعلا على كل شيء.",
+    dua:"يا متعالي, عالِ همتي عن الدنيا وعلّقها بالجنة ولا تُنزلها إلى الحضيض." },
+  { num:80, name:"البر",       trans:"AL-BARR",       accent:"accent-green",
+    meaning:"الكثير الإحسان والبر, يُوصل الخير لعباده بطرق يعلمها ولا يعلمونها.",
+    dua:"يا بر, أبرّ بوالديّ وصلني بمن قطعني وأحسن إليّ كما أحسنت من قبل." },
+  { num:81, name:"التواب",     trans:"AT-TAWWAB",     accent:"accent-green",
+    meaning:"كثير قبول التوبة, يتوب على عباده ويلهمهم التوبة ثم يقبلها منهم.",
+    dua:"يا تواب, تب عليّ وألهمني التوبة الصادقة وأعنّي على دوام الاستغفار." },
+  { num:82, name:"المنتقم",    trans:"AL-MUNTAQIM",   accent:"accent-rose",
+    meaning:"الذي ينتقم من أهل الجرائم والظلم بعدله, انتقامه حق ليس بظلم.",
+    dua:"يا منتقم, انتقم لي ممن ظلمني وكن لي عوناً على من بغى عليّ بغير حق." },
+  { num:83, name:"العفو",      trans:"AL-AFUWW",      accent:"accent-green",
+    meaning:"كثير العفو, يعفو عن السيئات ويمحوها كأنها لم تكن, عفوه شامل واسع.",
+    dua:"يا عفو, اعفُ عني وامحُ ذنوبي كما تمحو السيئات وتستر القبائح." },
+  { num:84, name:"الرؤوف",     trans:"AR-RA'OOF",     accent:"accent-rose",
+    meaning:"الشديد الرأفة بعباده, رأفة تفوق الرحمة وتتجاوز العدل إلى الفضل.",
+    dua:"يا رؤوف, رُف بي في ضعفي وتقصيري وارأف بحالي في الدنيا والآخرة." },
+  { num:85, name:"مالك الملك", trans:"MALIK AL-MULK", accent:"accent-gold",
+    meaning:"المالك التام للملك, يعطيه من يشاء وينزعه ممن يشاء بيده الخير كله.",
+    dua:"يا مالك الملك, أعطني من ملكك ما أكون به غنياً عن خلقك قانعاً بعطائك." },
+  { num:86, name:"ذو الجلال",  trans:"DHUL-JALAL",    accent:"accent-gold",
+    meaning:"صاحب الجلال والعظمة والإكرام, الذي أمر عباده بتعظيمه وإجلاله.",
+    dua:"يا ذا الجلال والإكرام, أكرمني بالقرآن واجعله ربيع قلبي ونور صدري." },
+  { num:87, name:"المقسط",     trans:"AL-MUQSIT",     accent:"accent-teal",
+    meaning:"العادل في أقواله وأفعاله وأحكامه, الذي يُرضي المظلوم وينصفه.",
+    dua:"يا مقسط, اجعلني من القاسطين بالعدل ولا تجعل في قلبي ميلاً للجور." },
+  { num:88, name:"الجامع",     trans:"AL-JAMI'",      accent:"accent-violet",
+    meaning:"الذي يجمع الخلائق يوم القيامة, ويجمع بين المتفرقات بقدرته.",
+    dua:"يا جامع, اجمع شملي وشمل أهلي في الدنيا وأجمعنا في جنتك يوم القيامة." },
+  { num:89, name:"الغني",      trans:"AL-GHANI",      accent:"accent-gold",
+    meaning:"الغني عن كل شيء وعن جميع خلقه, لا يحتاج إلى أحد ولا شيء.",
+    dua:"يا غني, أغنني بحلالك عن حرامك وبطاعتك عن معصيتك وبفضلك عمن سواك." },
+  { num:90, name:"المغني",     trans:"AL-MUGHNI",     accent:"accent-gold",
+    meaning:"الذي يُغني من يشاء من عباده بما يشاء من وجوه كثيرة.",
+    dua:"يا مغني, أغنِ فقري واسدد ديني ويسّر لي أسباب الكفاية والقناعة." },
+  { num:91, name:"المانع",     trans:"AL-MANI'",      accent:"accent-blue",
+    meaning:"الذي يمنع عن عباده ما يضرهم ويمنع من يشاء من الهلاك والضرر.",
+    dua:"يا مانع, امنع عني شر الشيطان والهوى والفتن ومن أراد بي سوءاً." },
+  { num:92, name:"الضار",      trans:"AD-DARR",       accent:"accent-rose",
+    meaning:"الذي يضر من يشاء من خلقه بما يشاء, الضر والنفع بيده وحده.",
+    dua:"يا ضار, اصرف عني ضر الأمراض والفتن وكل ما يضرني في ديني ودنياي." },
+  { num:93, name:"النافع",     trans:"AN-NAFI'",      accent:"accent-green",
+    meaning:"الذي ينفع من يشاء من خلقه, كل نفع في الكون فمصدره وحده.",
+    dua:"يا نافع, انفعني بما علّمتني وانفع بي, واجعلني سبباً لنفع من حولي." },
+  { num:94, name:"النور",      trans:"AN-NOOR",       accent:"accent-gold",
+    meaning:"نور السماوات والأرض, يُنوّر القلوب بالهداية والعقول بالعلم.",
+    dua:"يا نور, نوّر قلبي بنور إيمانك ونوّر قبري يوم الظلمة ونوّر وجهي يوم لقائك." },
+  { num:95, name:"الهادي",     trans:"AL-HADI",       accent:"accent-teal",
+    meaning:"الذي يهدي من يشاء إلى الحق والصراط المستقيم برحمته وفضله.",
+    dua:"يا هادي, اهدني إلى الحق واثبتني عليه ولا تُضلني بعد إذ هديتني." },
+  { num:96, name:"البديع",     trans:"AL-BADI'",      accent:"accent-violet",
+    meaning:"الذي أبدع الخلق على غير مثال سابق, خلقه فريد في كماله وجماله.",
+    dua:"يا بديع, ابدع في حياتي من الخير ما لم يخطر ببالي واجعلني ممن تعجبهم قدرتك." },
+  { num:97, name:"الباقي",     trans:"AL-BAQI",       accent:"accent-gold",
+    meaning:"الدائم الذي لا يزول ولا يفنى, الباقي بعد فناء جميع الخلق.",
+    dua:"يا باقي, أبقِ في قلبي محبتك وفي عملي الإخلاص وفي حياتي الاستقامة." },
+  { num:98, name:"الوارث",     trans:"AL-WARITH",     accent:"accent-violet",
+    meaning:"الذي يرث الأرض ومن عليها بعد فناء الخلق, وإليه يرجع كل شيء.",
+    dua:"يا وارث, أورثني الجنة ولا تجعل لي من فضلك نصيباً إلا الرضا والقبول." },
+  { num:99, name:"الرشيد",     trans:"AR-RASHEED",    accent:"accent-teal",
+    meaning:"الذي بلغت حكمته غايتها في رشد الأمور وتدبيرها على أتم وجه.",
+    dua:"يا رشيد, أرشدني إلى ما فيه خيري وأرشد أهلي وأمتي إلى الصراط المستقيم." }
+];
+
+let fontLevel = 2;
+const fontScales = [0.85, 1, 1.2, 1.45];
+const fontLabels = ['ص', 'م', 'ك', 'ك+'];
+let filtered = [...asma];
+
+function changeFont(dir) {
+  fontLevel = Math.max(1, Math.min(4, fontLevel + dir));
+  document.documentElement.style.setProperty('--font-scale', fontScales[fontLevel-1]);
+  document.getElementById('fontDisplay').textContent = fontLabels[fontLevel-1];
+}
+
+function filterNames() {
+  const q = document.getElementById('searchInput').value.trim();
+  if (!q) { filtered = [...asma]; }
+  else {
+    filtered = asma.filter(a =>
+      a.name.includes(q) || a.meaning.includes(q) || a.trans.toLowerCase().includes(q.toLowerCase())
+    );
+  }
+  document.getElementById('countDisplay').textContent = filtered.length;
+  renderGrid();
+}
+
+function shareCard(idx) {
+  const a = asma[idx];
+  const text = `✨ ${a.name} ✨\n\n📖 المعنى:\n${a.meaning}\n\n🤲 الدعاء:\n${a.dua}\n\n— من أسماء الله الحسنى`;
+  if (navigator.share) {
+    navigator.share({ text });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => showToast('تم نسخ الاسم والدعاء'));
+  } else {
+    showToast('النسخ غير متاح في هذا المتصفح');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function renderGrid() {
+  const grid = document.getElementById('namesGrid');
+  grid.innerHTML = '';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<div class="no-results">لم يُعثر على اسم يطابق البحث</div>';
+    return;
+  }
+
+  filtered.forEach((a, i) => {
+    const card = document.createElement('div');
+    card.className = 'name-card';
+    card.style.animationDelay = Math.min(i * 0.04, 0.5) + 's';
+
+    card.innerHTML = `
+      <div class="card-accent ${a.accent}"></div>
+      <div class="card-inner">
+        <div class="card-num">${a.num}</div>
+        <div class="card-name-wrap">
+          <div>
+            <div class="card-name">${a.name}</div>
+            <div class="card-transliteration">${a.trans}</div>
+          </div>
+        </div>
+        <div class="card-meaning-box">
+          <div class="card-meaning-label">المعنى</div>
+          <div class="card-meaning-text">${a.meaning}</div>
+        </div>
+        <div class="card-dua-box">
+          <div class="card-dua-label">الدعاء بهذا الاسم</div>
+          <div class="card-dua-text">${a.dua}</div>
+        </div>
+        <div class="card-footer">
+          <span class="card-index-badge">الاسم ${a.num} من 99</span>
+          <button class="share-btn" onclick="shareCard(${a.num - 1})">
+            <span class="share-icon">&#8679;</span> مشاركة
+          </button>
+        </div>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  const footer = document.createElement('div');
+  footer.className = 'page-footer';
+  footer.innerHTML = `
+    <strong>وَلِلَّهِ الْأَسْمَاءُ الْحُسْنَىٰ فَادْعُوهُ بِهَا</strong><br>
+    اللهم إنا نسألك بكل اسم هو لك أن تغفر لنا وترحمنا وتدخلنا جنتك
+  `;
+  grid.appendChild(footer);
+}
+
+renderGrid();
+</script>
+</body>
+</html>
