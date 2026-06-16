@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>مسبحة الليل</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Reem+Kufi:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --night-1: #07140f;
+    --night-2: #0a2030;
+    --night-3: #051018;
+    --gold: #e3b873;
+    --gold-soft: #c79a5a;
+    --jade: #3fb59a;
+    --jade-glow: rgba(63, 181, 154, 0.35);
+    --parchment: #f4ecd8;
+    --muted: #9db4ae;
+    --line: rgba(227, 184, 115, 0.18);
+    --card: rgba(11, 30, 26, 0.55);
+    --display: 'Reem Kufi', 'Tahoma', sans-serif;
+    --body: 'Amiri', 'Scheherazade New', 'Traditional Arabic', serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body { height: 100%; }
+
+  body {
+    font-family: var(--body);
+    color: var(--parchment);
+    background:
+      radial-gradient(120% 80% at 50% 6%, rgba(63, 181, 154, 0.10), transparent 55%),
+      radial-gradient(140% 90% at 50% 105%, rgba(227, 184, 115, 0.08), transparent 60%),
+      linear-gradient(160deg, var(--night-1) 0%, var(--night-2) 52%, var(--night-3) 100%);
+    min-height: 100dvh;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  #stars { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+
+  .wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 460px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 18px 26px;
+  }
+
+  /* Header */
+  header { text-align: center; margin-bottom: 10px; }
+  .title {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 26px;
+    letter-spacing: 1px;
+    color: var(--gold);
+    text-shadow: 0 0 22px rgba(227, 184, 115, 0.25);
+  }
+  .subtitle {
+    font-family: var(--body);
+    font-size: 15px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* Mode toggle */
+  .modes {
+    display: flex;
+    gap: 8px;
+    margin: 14px auto 12px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px;
+    width: fit-content;
+  }
+  .mode-btn {
+    font-family: var(--display);
+    font-size: 14px;
+    color: var(--muted);
+    background: transparent;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: color 0.25s, background 0.25s;
+  }
+  .mode-btn.active {
+    color: var(--night-1);
+    background: linear-gradient(135deg, var(--gold), var(--gold-soft));
+    font-weight: 600;
+  }
+
+  /* Chips */
+  .chips {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 2px 8px;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto;
+    font-family: var(--body);
+    font-size: 17px;
+    color: var(--parchment);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 9px 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color 0.25s, transform 0.15s, box-shadow 0.25s;
+  }
+  .chip:active { transform: scale(0.96); }
+  .chip.active {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 1px var(--gold), 0 6px 20px rgba(227, 184, 115, 0.12);
+    color: var(--gold);
+  }
+
+  /* Sequence steps indicator */
+  .steps {
+    display: none;
+    justify-content: center;
+    gap: 10px;
+    margin: 6px 0 2px;
+  }
+  .steps.show { display: flex; }
+  .step-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: transparent;
+    transition: background 0.3s, transform 0.3s, border-color 0.3s;
+  }
+  .step-dot.done { background: var(--jade); border-color: var(--jade); }
+  .step-dot.current { background: var(--gold); border-color: var(--gold); transform: scale(1.35); }
+
+  /* Orb area */
+  .stage {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 0;
+  }
+
+  .orb-zone {
+    position: relative;
+    width: 290px;
+    height: 290px;
+    display: grid;
+    place-items: center;
+  }
+
+  .ring-svg { position: absolute; inset: 0; transform: rotate(-90deg); }
+  .ring-track { fill: none; stroke: rgba(227, 184, 115, 0.12); stroke-width: 6; }
+  .ring-fill {
+    fill: none;
+    stroke: url(#goldGrad);
+    stroke-width: 6;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: drop-shadow(0 0 6px rgba(227, 184, 115, 0.5));
+  }
+
+  .orb {
+    position: relative;
+    width: 232px;
+    height: 232px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    color: var(--parchment);
+    background:
+      radial-gradient(circle at 38% 32%, rgba(255, 255, 255, 0.14), transparent 42%),
+      radial-gradient(circle at 50% 50%, rgba(63, 181, 154, 0.22), rgba(10, 32, 48, 0.9) 70%),
+      radial-gradient(circle at 50% 120%, rgba(227, 184, 115, 0.25), transparent 60%);
+    box-shadow:
+      inset 0 0 50px rgba(0, 0, 0, 0.45),
+      inset 0 2px 18px rgba(255, 255, 255, 0.08),
+      0 0 60px rgba(63, 181, 154, 0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    overflow: hidden;
+    transition: transform 0.12s ease, box-shadow 0.3s ease;
+    outline: none;
+  }
+  .orb:focus-visible { box-shadow: inset 0 0 50px rgba(0,0,0,0.45), 0 0 0 3px var(--gold), 0 0 60px rgba(63,181,154,0.18); }
+  .orb.press { transform: scale(0.965); }
+
+  .orb-dhikr {
+    font-family: var(--body);
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 1.5;
+    text-align: center;
+    padding: 0 22px;
+    color: var(--parchment);
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.5);
+  }
+  .orb-count {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 22px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+  .orb-count .target { color: var(--muted); font-size: 16px; }
+
+  .done-badge {
+    position: absolute;
+    bottom: 30px;
+    font-family: var(--display);
+    font-size: 13px;
+    color: var(--jade);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .done-badge.show { opacity: 1; }
+
+  .hint {
+    font-family: var(--body);
+    font-size: 14px;
+    color: var(--muted);
+    margin-top: 12px;
+    text-align: center;
+  }
+
+  /* Ripple + particles layer */
+  .fx { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+  .ripple {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid rgba(227, 184, 115, 0.6);
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0.9;
+    animation: ripple 0.7s ease-out forwards;
+  }
+  @keyframes ripple {
+    to { transform: translate(-50%, -50%) scale(2.1); opacity: 0; }
+  }
+  .particle {
+    position: absolute;
+    font-family: var(--body);
+    font-size: 15px;
+    color: var(--gold);
+    transform: translate(-50%, -50%);
+    animation: floatUp 1.1s ease-out forwards;
+    text-shadow: 0 0 10px rgba(227, 184, 115, 0.5);
+  }
+  @keyframes floatUp {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+    20% { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%, -220%) scale(1.05); }
+  }
+
+  .starburst {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 232px; height: 232px;
+    transform: translate(-50%, -50%) scale(0.3) rotate(0deg);
+    opacity: 0;
+    pointer-events: none;
+  }
+  .starburst.go { animation: bloom 0.9s ease-out forwards; }
+  @keyframes bloom {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.3) rotate(0deg); }
+    35% { opacity: 0.9; }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.25) rotate(45deg); }
+  }
+
+  /* Totals */
+  .totals {
+    display: flex;
+    justify-content: center;
+    gap: 26px;
+    margin: 6px 0 12px;
+    text-align: center;
+  }
+  .total-box .num {
+    font-family: var(--display);
+    font-weight: 600;
+    font-size: 20px;
+    color: var(--parchment);
+  }
+  .total-box .lbl {
+    font-family: var(--body);
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Info card */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 16px 16px 14px;
+    margin-bottom: 12px;
+    backdrop-filter: blur(4px);
+  }
+  .card h3 {
+    font-family: var(--display);
+    font-weight: 500;
+    font-size: 14px;
+    color: var(--gold);
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .card .text {
+    font-family: var(--body);
+    font-size: 18px;
+    line-height: 1.9;
+    color: var(--parchment);
+  }
+  .card .explain {
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--muted);
+    margin-top: 8px;
+  }
+  .card .ref {
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--jade);
+    margin-top: 8px;
+  }
+
+  /* Controls */
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+  .ctrl {
+    font-family: var(--display);
+    font-size: 14px;
+    color: var(--parchment);
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 11px 16px;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.12s, color 0.2s;
+  }
+  .ctrl:active { transform: scale(0.95); }
+  .ctrl:hover { border-color: var(--gold); }
+  .ctrl.toggle-on { color: var(--jade); border-color: var(--jade); }
+
+  /* Completion overlay */
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 5;
+    background: rgba(5, 16, 24, 0.82);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .overlay.show { display: flex; }
+  .overlay-card {
+    max-width: 420px;
+    width: 100%;
+    background: linear-gradient(160deg, rgba(11, 30, 26, 0.95), rgba(5, 16, 24, 0.95));
+    border: 1px solid var(--gold);
+    border-radius: 22px;
+    padding: 26px 22px;
+    text-align: center;
+    box-shadow: 0 0 70px rgba(227, 184, 115, 0.18);
+  }
+  .overlay-card .ok {
+    font-family: var(--display);
+    font-size: 22px;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+  .overlay-card .big {
+    font-family: var(--body);
+    font-size: 21px;
+    line-height: 1.9;
+    color: var(--parchment);
+    margin: 12px 0;
+  }
+  .overlay-card .ref {
+    font-family: var(--body);
+    font-size: 13px;
+    color: var(--jade);
+    margin-bottom: 18px;
+  }
+  .overlay-card .ctrl { margin: 0 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ripple, .particle, .starburst.go { animation: none; opacity: 0; }
+    .ring-fill { transition: none; }
+  }
+
+  @media (max-height: 720px) {
+    .orb-zone { width: 250px; height: 250px; }
+    .orb { width: 200px; height: 200px; }
+    .orb-dhikr { font-size: 26px; }
+  }
+</style>
+</head>
+<body>
+<canvas id="stars"></canvas>
+
+<div class="wrap">
+  <header>
+    <div class="title">مسبحة الليل</div>
+    <div class="subtitle">سبّح بقلب حاضر، والعدّ يعينك</div>
+  </header>
+
+  <div class="modes">
+    <button class="mode-btn active" data-mode="single" id="modeSingle">ذكر واحد</button>
+    <button class="mode-btn" data-mode="sequence" id="modeSeq">بعد الصلاة</button>
+  </div>
+
+  <div class="chips" id="chips"></div>
+  <div class="steps" id="steps"></div>
+
+  <div class="stage">
+    <div class="orb-zone">
+      <svg class="ring-svg" viewBox="0 0 290 290">
+        <defs>
+          <linearGradient id="goldGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#3fb59a" />
+            <stop offset="100%" stop-color="#e3b873" />
+          </linearGradient>
+        </defs>
+        <circle class="ring-track" cx="145" cy="145" r="138" />
+        <circle class="ring-fill" id="ringFill" cx="145" cy="145" r="138" />
+      </svg>
+
+      <svg class="starburst" id="starburst" viewBox="0 0 100 100">
+        <polygon points="50,2 60,40 98,50 60,60 50,98 40,60 2,50 40,40"
+                 fill="none" stroke="#e3b873" stroke-width="1.4" />
+        <polygon points="50,12 57,43 88,50 57,57 50,88 43,57 12,50 43,43"
+                 fill="rgba(227,184,115,0.12)" stroke="#3fb59a" stroke-width="0.8" />
+      </svg>
+
+      <button class="orb" id="orb" aria-label="اضغط للتسبيح">
+        <div class="fx" id="fx"></div>
+        <div class="orb-dhikr" id="orbDhikr">سبحان الله</div>
+        <div class="orb-count" id="orbCount">0 <span class="target">/ 33</span></div>
+        <div class="done-badge" id="doneBadge">اكتمل العدد</div>
+      </button>
+    </div>
+    <div class="hint">اضغط داخل الدائرة لكل تسبيحة</div>
+  </div>
+
+  <div class="totals">
+    <div class="total-box"><div class="num" id="todayTotal">0</div><div class="lbl">إجمالي اليوم</div></div>
+    <div class="total-box"><div class="num" id="allTotal">0</div><div class="lbl">الإجمالي الكلي</div></div>
+  </div>
+
+  <div class="card" id="infoCard">
+    <h3 id="infoTitle">فضل الذكر</h3>
+    <div class="text" id="infoText"></div>
+    <div class="explain" id="infoExplain"></div>
+    <div class="ref" id="infoRef"></div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl" id="resetBtn">تصفير العدّاد</button>
+    <button class="ctrl toggle-on" id="soundBtn">الصوت: مفعّل</button>
+  </div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="overlay-card">
+    <div class="ok">تم بحمد الله</div>
+    <div class="big" id="ovBig"></div>
+    <div class="ref" id="ovRef"></div>
+    <button class="ctrl" id="ovRestart">إعادة</button>
+    <button class="ctrl" id="ovClose">إغلاق</button>
+  </div>
+</div>
+
+<script>
+/* ---------- Authentic adhkar data ----------
+   Each citation includes full text, a short explanation, and the reference.
+   References follow well known prints, numbering can vary slightly by edition. */
+const ADHKAR = {
+  subhanallah: {
+    label: "سبحان الله",
+    dhikr: "سبحان الله",
+    target: 33,
+    title: "فضل التسبيح",
+    text: "قال النبي صلى الله عليه وسلم: من قال سبحان الله وبحمده في يوم مائة مرة، حُطّت خطاياه وإن كانت مثل زبد البحر.",
+    explain: "سبحان الله: تنزيه الله سبحانه وتعالى عن كل نقص وعيب، مقرونا بحمده والثناء عليه.",
+    ref: "رواه البخاري (٦٤٠٥) ومسلم (٢٦٩١)، عن أبي هريرة رضي الله عنه."
+  },
+  subhanazeem: {
+    label: "سبحان الله العظيم",
+    dhikr: "سبحان الله وبحمده\nسبحان الله العظيم",
+    target: 33,
+    title: "كلمتان حبيبتان إلى الرحمن",
+    text: "قال النبي صلى الله عليه وسلم: كلمتان خفيفتان على اللسان، ثقيلتان في الميزان، حبيبتان إلى الرحمن: سبحان الله وبحمده، سبحان الله العظيم.",
+    explain: "ثناء وتنزيه يسير على اللسان عظيم الأجر، يثقل في ميزان العبد يوم القيامة بفضل الله.",
+    ref: "رواه البخاري (٦٤٠٦) ومسلم (٢٦٩٤)، عن أبي هريرة رضي الله عنه."
+  },
+  alhamdulillah: {
+    label: "الحمد لله",
+    dhikr: "الحمد لله",
+    target: 33,
+    title: "فضل الحمد",
+    text: "قال النبي صلى الله عليه وسلم: الطُّهور شطر الإيمان، والحمد لله تملأ الميزان.",
+    explain: "الحمد لله: الثناء على الله بصفات الكمال مع محبته وتعظيمه، شكرا له على نعمه التي لا تحصى.",
+    ref: "رواه مسلم (٢٢٣)، عن أبي مالك الأشعري رضي الله عنه."
+  },
+  allahuakbar: {
+    label: "الله أكبر",
+    dhikr: "الله أكبر",
+    target: 33,
+    title: "من أحب الكلام إلى الله",
+    text: "قال النبي صلى الله عليه وسلم: أحب الكلام إلى الله أربع: سبحان الله، والحمد لله، ولا إله إلا الله، والله أكبر، لا يضرك بأيهن بدأت.",
+    explain: "الله أكبر: تعظيم لله سبحانه وتعالى، وأنه أكبر وأعظم من كل شيء سواه.",
+    ref: "رواه مسلم (٢١٣٧)، عن سمرة بن جندب رضي الله عنه."
+  },
+  tahlil: {
+    label: "لا إله إلا الله",
+    dhikr: "لا إله إلا الله وحده لا شريك له\nله الملك وله الحمد\nوهو على كل شيء قدير",
+    target: 100,
+    title: "فضل التهليل",
+    text: "قال النبي صلى الله عليه وسلم: من قال لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير، في يوم مائة مرة، كانت له عدل عشر رقاب، وكُتبت له مائة حسنة، ومُحيت عنه مائة سيئة، وكانت له حرزا من الشيطان يومه ذلك حتى يمسي.",
+    explain: "أعظم كلمة، وهي شهادة التوحيد التي عليها مدار الدين، إفراد الله وحده بالعبادة.",
+    ref: "رواه البخاري (٣٢٩٣) ومسلم (٢٦٩١)، عن أبي هريرة رضي الله عنه."
+  },
+  hawqala: {
+    label: "لا حول ولا قوة إلا بالله",
+    dhikr: "لا حول ولا قوة\nإلا بالله",
+    target: 33,
+    title: "كنز من كنوز الجنة",
+    text: "قال النبي صلى الله عليه وسلم لأبي موسى: ألا أدلك على كنز من كنوز الجنة؟ قلت: بلى يا رسول الله، قال: لا حول ولا قوة إلا بالله.",
+    explain: "إقرار بأن لا تحول من حال إلى حال، ولا قوة على شيء، إلا بإعانة الله وحده.",
+    ref: "رواه البخاري (٦٣٨٤) ومسلم (٢٧٠٤)، عن أبي موسى الأشعري رضي الله عنه."
+  },
+  istighfar: {
+    label: "أستغفر الله",
+    dhikr: "أستغفر الله",
+    target: 100,
+    title: "فضل الاستغفار",
+    text: "قال النبي صلى الله عليه وسلم: يا أيها الناس، توبوا إلى الله، فإني أتوب إليه في اليوم مائة مرة.",
+    explain: "الاستغفار: طلب المغفرة من الله مع الندم والعزم على ترك الذنب، وهو دأب الصالحين.",
+    ref: "رواه مسلم (٢٧٠٢)، عن الأغر المزني رضي الله عنه."
+  }
+};
+
+const SINGLE_ORDER = ["subhanallah", "alhamdulillah", "allahuakbar", "tahlil", "subhanazeem", "hawqala", "istighfar"];
+
+/* Post salah sequence: 33 + 33 + 33 + 1 = 100 */
+const SEQ = [
+  { key: "subhanallah", dhikr: "سبحان الله", target: 33 },
+  { key: "alhamdulillah", dhikr: "الحمد لله", target: 33 },
+  { key: "allahuakbar", dhikr: "الله أكبر", target: 33 },
+  { key: "tahlil", dhikr: "لا إله إلا الله وحده لا شريك له\nله الملك وله الحمد\nوهو على كل شيء قدير", target: 1 }
+];
+const SEQ_INFO = {
+  title: "أذكار ما بعد الصلاة",
+  text: "قال النبي صلى الله عليه وسلم: من سبّح الله في دبر كل صلاة ثلاثا وثلاثين، وحمد الله ثلاثا وثلاثين، وكبّر الله ثلاثا وثلاثين، فتلك تسعة وتسعون، وقال تمام المائة: لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير، غُفرت خطاياه وإن كانت مثل زبد البحر.",
+  explain: "تُقال عقب كل صلاة مفروضة: ثلاث وثلاثون تسبيحا، وثلاث وثلاثون تحميدا، وثلاث وثلاثون تكبيرا، ثم تُتمّ المائة بالتهليل.",
+  ref: "رواه مسلم (٥٩٧)، عن أبي هريرة رضي الله عنه."
+};
+
+/* ---------- State ---------- */
+const RING_C = 2 * Math.PI * 138;
+let state = {
+  mode: "single",
+  currentKey: "subhanallah",
+  count: 0,
+  seqIndex: 0,
+  soundOn: true,
+  completedFlag: false,
+  today: 0,
+  allTime: 0,
+  storedDate: ""
+};
+let memFallback = null;
+
+/* ---------- Elements ---------- */
+const el = id => document.getElementById(id);
+const orb = el("orb"), orbDhikr = el("orbDhikr"), orbCount = el("orbCount");
+const ringFill = el("ringFill"), fx = el("fx"), doneBadge = el("doneBadge");
+const chipsBox = el("chips"), stepsBox = el("steps"), starburst = el("starburst");
+const infoTitle = el("infoTitle"), infoText = el("infoText"), infoExplain = el("infoExplain"), infoRef = el("infoRef");
+const todayTotalEl = el("todayTotal"), allTotalEl = el("allTotal");
+const overlay = el("overlay"), ovBig = el("ovBig"), ovRef = el("ovRef");
+
+ringFill.style.strokeDasharray = RING_C;
+ringFill.style.strokeDashoffset = RING_C;
+
+/* ---------- Storage (graceful) ---------- */
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+}
+async function loadTotals() {
+  const today = todayStr();
+  let data = null;
+  try {
+    const r = await window.storage.get("tasbih:totals");
+    if (r && r.value) data = JSON.parse(r.value);
+  } catch (e) { data = memFallback; }
+  if (!data) data = { date: today, today: 0, allTime: 0 };
+  if (data.date !== today) { data.date = today; data.today = 0; }
+  state.today = data.today || 0;
+  state.allTime = data.allTime || 0;
+  state.storedDate = data.date;
+  renderTotals();
+}
+async function saveTotals() {
+  const data = { date: state.storedDate, today: state.today, allTime: state.allTime };
+  memFallback = data;
+  try { await window.storage.set("tasbih:totals", JSON.stringify(data)); }
+  catch (e) { /* keep memory fallback */ }
+}
+
+/* ---------- Sound ---------- */
+let audioCtx = null;
+function tick() {
+  if (!state.soundOn) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = "sine";
+    o.frequency.setValueAtTime(660, audioCtx.currentTime);
+    g.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.06, audioCtx.currentTime + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.09);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + 0.1);
+  } catch (e) {}
+}
+function chime() {
+  if (!state.soundOn) return;
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    [0, 0.12].forEach((t, i) => {
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = "sine";
+      o.frequency.setValueAtTime(i === 0 ? 740 : 988, audioCtx.currentTime + t);
+      g.gain.setValueAtTime(0.0001, audioCtx.currentTime + t);
+      g.gain.exponentialRampToValueAtTime(0.08, audioCtx.currentTime + t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + t + 0.3);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(audioCtx.currentTime + t); o.stop(audioCtx.currentTime + t + 0.32);
+    });
+  } catch (e) {}
+}
+
+/* ---------- Helpers ---------- */
+function activeTarget() {
+  if (state.mode === "sequence") return SEQ[state.seqIndex].target;
+  return ADHKAR[state.currentKey].target;
+}
+function activeDhikrText() {
+  if (state.mode === "sequence") return SEQ[state.seqIndex].dhikr;
+  return ADHKAR[state.currentKey].dhikr;
+}
+function fitDhikrFont(txt) {
+  const lines = txt.split("\n").length;
+  if (lines >= 3) return "20px";
+  if (lines === 2) return "24px";
+  if (txt.length > 11) return "26px";
+  return "30px";
+}
+
+/* ---------- Render ---------- */
+function renderOrb() {
+  const txt = activeDhikrText();
+  orbDhikr.style.fontSize = fitDhikrFont(txt);
+  orbDhikr.innerHTML = txt.split("\n").join("<br>");
+  const target = activeTarget();
+  orbCount.innerHTML = state.count + ' <span class="target">/ ' + target + '</span>';
+  const prog = Math.min(state.count / target, 1);
+  ringFill.style.strokeDashoffset = RING_C * (1 - prog);
+  doneBadge.classList.toggle("show", state.completedFlag && state.mode === "single");
+}
+function renderTotals() {
+  todayTotalEl.textContent = state.today;
+  allTotalEl.textContent = state.allTime;
+}
+function renderInfo() {
+  if (state.mode === "sequence") {
+    infoTitle.textContent = SEQ_INFO.title;
+    infoText.textContent = SEQ_INFO.text;
+    infoExplain.textContent = SEQ_INFO.explain;
+    infoRef.textContent = SEQ_INFO.ref;
+  } else {
+    const d = ADHKAR[state.currentKey];
+    infoTitle.textContent = d.title;
+    infoText.textContent = d.text;
+    infoExplain.textContent = d.explain;
+    infoRef.textContent = d.ref;
+  }
+}
+function buildChips() {
+  chipsBox.innerHTML = "";
+  SINGLE_ORDER.forEach(key => {
+    const b = document.createElement("button");
+    b.className = "chip" + (key === state.currentKey ? " active" : "");
+    b.textContent = ADHKAR[key].label;
+    b.onclick = () => selectKey(key);
+    chipsBox.appendChild(b);
+  });
+}
+function buildSteps() {
+  stepsBox.innerHTML = "";
+  SEQ.forEach((s, i) => {
+    const dot = document.createElement("div");
+    dot.className = "step-dot" + (i < state.seqIndex ? " done" : "") + (i === state.seqIndex ? " current" : "");
+    stepsBox.appendChild(dot);
+  });
+}
+
+/* ---------- Actions ---------- */
+function selectKey(key) {
+  state.currentKey = key;
+  state.count = 0;
+  state.completedFlag = false;
+  buildChips();
+  renderOrb();
+  renderInfo();
+}
+function setMode(mode) {
+  state.mode = mode;
+  state.count = 0;
+  state.completedFlag = false;
+  state.seqIndex = 0;
+  el("modeSingle").classList.toggle("active", mode === "single");
+  el("modeSeq").classList.toggle("active", mode === "sequence");
+  chipsBox.style.display = mode === "single" ? "flex" : "none";
+  stepsBox.classList.toggle("show", mode === "sequence");
+  if (mode === "sequence") buildSteps();
+  renderOrb();
+  renderInfo();
+}
+
+function spawnFx(x, y) {
+  const ripple = document.createElement("div");
+  ripple.className = "ripple";
+  ripple.style.left = x + "px"; ripple.style.top = y + "px";
+  ripple.style.width = "60px"; ripple.style.height = "60px";
+  fx.appendChild(ripple);
+  setTimeout(() => ripple.remove(), 720);
+
+  const p = document.createElement("div");
+  p.className = "particle";
+  p.textContent = state.mode === "sequence" ? SEQ[state.seqIndex].dhikr.split("\n")[0] : ADHKAR[state.currentKey].label;
+  p.style.left = x + "px"; p.style.top = y + "px";
+  fx.appendChild(p);
+  setTimeout(() => p.remove(), 1120);
+}
+
+function celebrate() {
+  starburst.classList.remove("go");
+  void starburst.offsetWidth;
+  starburst.classList.add("go");
+  chime();
+  if (navigator.vibrate) navigator.vibrate([15, 40, 15]);
+}
+
+function increment(x, y) {
+  const target = activeTarget();
+  state.count++;
+  state.today++;
+  state.allTime++;
+  tick();
+  if (navigator.vibrate) navigator.vibrate(10);
+  spawnFx(x, y);
+  renderTotals();
+  saveTotals();
+
+  if (state.count === target) {
+    if (state.mode === "sequence") {
+      celebrate();
+      setTimeout(advanceSeq, 750);
+    } else {
+      state.completedFlag = true;
+      celebrate();
+    }
+  }
+  renderOrb();
+}
+
+function advanceSeq() {
+  if (state.seqIndex < SEQ.length - 1) {
+    state.seqIndex++;
+    state.count = 0;
+    buildSteps();
+    renderOrb();
+  } else {
+    finishSeq();
+  }
+}
+function finishSeq() {
+  ovBig.innerHTML = SEQ_INFO.text;
+  ovRef.textContent = SEQ_INFO.ref;
+  overlay.classList.add("show");
+  chime();
+}
+
+/* ---------- Events ---------- */
+function orbTap(e) {
+  let x, y;
+  const rect = orb.getBoundingClientRect();
+  if (e.touches && e.touches[0]) {
+    x = e.touches[0].clientX - rect.left;
+    y = e.touches[0].clientY - rect.top;
+  } else if (e.clientX !== undefined) {
+    x = e.clientX - rect.left;
+    y = e.clientY - rect.top;
+  } else {
+    x = rect.width / 2; y = rect.height / 2;
+  }
+  orb.classList.add("press");
+  setTimeout(() => orb.classList.remove("press"), 120);
+  increment(x, y);
+}
+
+orb.addEventListener("click", (e) => { orbTap(e); });
+orb.addEventListener("keydown", (e) => {
+  if (e.key === "Enter" || e.key === " ") { e.preventDefault(); orbTap(e); }
+});
+
+el("resetBtn").onclick = () => {
+  state.count = 0;
+  state.completedFlag = false;
+  if (state.mode === "sequence") { state.seqIndex = 0; buildSteps(); }
+  renderOrb();
+};
+el("soundBtn").onclick = () => {
+  state.soundOn = !state.soundOn;
+  const b = el("soundBtn");
+  b.textContent = state.soundOn ? "الصوت: مفعّل" : "الصوت: متوقف";
+  b.classList.toggle("toggle-on", state.soundOn);
+};
+el("modeSingle").onclick = () => setMode("single");
+el("modeSeq").onclick = () => setMode("sequence");
+el("ovRestart").onclick = () => { overlay.classList.remove("show"); setMode("sequence"); };
+el("ovClose").onclick = () => { overlay.classList.remove("show"); setMode("single"); };
+
+/* ---------- Starfield ---------- */
+function initStars() {
+  const c = el("stars"), ctx = c.getContext("2d");
+  let stars = [];
+  function resize() {
+    c.width = window.innerWidth; c.height = window.innerHeight;
+    const n = Math.floor((c.width * c.height) / 14000);
+    stars = [];
+    for (let i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * c.width,
+        y: Math.random() * c.height,
+        r: Math.random() * 1.3 + 0.2,
+        a: Math.random() * 0.5 + 0.1,
+        tw: Math.random() * 0.02 + 0.003,
+        dir: Math.random() > 0.5 ? 1 : -1
+      });
+    }
+  }
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function draw() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    for (const s of stars) {
+      if (!reduce) {
+        s.a += s.tw * s.dir;
+        if (s.a > 0.65) s.dir = -1;
+        if (s.a < 0.08) s.dir = 1;
+      }
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = "rgba(227, 222, 200, " + s.a + ")";
+      ctx.fill();
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  window.addEventListener("resize", resize);
+  resize(); draw();
+}
+
+/* ---------- Init ---------- */
+buildChips();
+setMode("single");
+renderInfo();
+initStars();
+loadTotals();
+</script>
+</body>
+</html>
